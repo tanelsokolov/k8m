@@ -4,10 +4,11 @@ on:
   push:
     branches:
       - main  # või oma haru, mida kasutad 
-
+    
 jobs:
   build-and-push:
     runs-on: ubuntu-latest
+    if: contains(github.event.head_commit.message, 'deploy dev') || contains(github.event.head_commit.message, 'deploy prod')
 
     steps:
       - name: Checkout repo
