@@ -3,7 +3,7 @@
 replicaCount: 1
 
 image:
-  repository: metrics-backend
+  repository: tanelsokolov/metrics-backend
   pullPolicy: Always
   tag: "latest"
 
