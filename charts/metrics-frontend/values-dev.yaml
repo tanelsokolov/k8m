@@ -27,7 +27,7 @@ ingress:
   annotations:
     nginx.ingress.kubernetes.io/rewrite-target: /
   hosts:
-    - host: metrics-backend-dev.local
+    - host: metrics-frontend-dev.local
       paths:
         - path: /
           pathType: Prefix
