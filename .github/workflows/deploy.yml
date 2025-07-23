@@ -3,7 +3,7 @@ name: Build and Push Docker Images
 on:
   push:
     branches:
-      - main  # või oma haru, mida kasutad
+      - main  # või oma haru, mida kasutad 
 
 jobs:
   build-and-push:
