@@ -1,0 +1,16 @@
+apiVersion: v2
+name: metrics-frontend
+description: A Helm chart for Metrics Frontend dashboard
+type: application
+version: 1.0.0
+appVersion: "1.0.0"
+keywords:
+  - metrics
+  - dashboard
+  - frontend
+  - nodejs
+maintainers:
+  - name: Tanel
+sources:
+  - https://github.com/tanelsokolov/metrics-frontend
+dependencies: []

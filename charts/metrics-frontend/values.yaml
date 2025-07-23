@@ -1,0 +1,97 @@
+# Default values for metrics-frontend
+replicaCount: 2
+
+image:
+  repository: metrics-frontend
+  pullPolicy: IfNotPresent
+  tag: "latest"
+
+imagePullSecrets: []
+nameOverride: ""
+fullnameOverride: ""
+
+serviceAccount:
+  create: true
+  annotations: {}
+  name: ""
+
+podAnnotations: {}
+
+podSecurityContext: {}
+
+securityContext:
+  runAsNonRoot: true
+  runAsUser: 1001
+  readOnlyRootFilesystem: false
+
+service:
+  type: ClusterIP
+  port: 5173
+  targetPort: 5173
+  nodePort: 30173
+
+ingress:
+  enabled: true
+  className: ""
+  annotations: {}
+  hosts:
+    - host: metrics.local
+      paths:
+        - path: /
+          pathType: Prefix
+  tls: []
+
+resources:
+  limits:
+    cpu: 200m
+    memory: 256Mi
+  requests:
+    cpu: 50m
+    memory: 64Mi
+
+nodeSelector: {}
+
+tolerations: []
+
+affinity: {}
+
+# Environment variables
+env:
+  PORT: "5173"
+  NODE_ENV: "production"
+
+# Backend service configuration
+backend:
+  serviceName: "metrics-backend"
+  servicePort: 3000
+  # For dev: use external IP, for prod: use internal service
+  externalUrl: "http://192.168.189.101"
+  useInternalService: false
+
+# ConfigMap data for frontend configuration
+config:
+  # Add any frontend-specific configuration here
+
+# Health check settings
+healthCheck:
+  enabled: true
+  path: /health
+  port: 5173
+  initialDelaySeconds: 10
+  periodSeconds: 30
+  timeoutSeconds: 5
+  failureThreshold: 3
+  readinessInitialDelaySeconds: 5
+  readinessPeriodSeconds: 10
+
+# Horizontal Pod Autoscaler
+autoscaling:
+  enabled: false
+  minReplicas: 2
+  maxReplicas: 10
+  targetCPUUtilizationPercentage: 80
+
+# Pod Disruption Budget
+podDisruptionBudget:
+  enabled: false
+  minAvailable: 1

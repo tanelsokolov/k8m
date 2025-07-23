@@ -1,0 +1,15 @@
+apiVersion: v2
+name: metrics-backend
+description: A Helm chart for Metrics Backend service
+type: application
+version: 1.0.0
+appVersion: "1.0.0"
+keywords:
+  - metrics
+  - monitoring
+  - backend
+  - nodejs
+maintainers:
+  - name: Tanel
+sources:
+  - https://github.com/tanelsokolov/metrics-backend

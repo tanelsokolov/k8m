@@ -1,0 +1,148 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ include "metrics-frontend.fullname" . }}-config
+  labels:
+    {{- include "metrics-frontend.labels" . | nindent 4 }}
+data:
+  # Server configuration
+  PORT: "5173"
+  NODE_ENV: {{ .Values.environment | quote }}
+  
+  # API configuration
+  API_BASE_URL: {{ .Values.config.api.baseUrl | quote }}
+  API_METRICS_ENDPOINT: {{ .Values.config.api.metricsEndpoint | quote }}
+  API_TIMEOUT: {{ .Values.config.api.timeout | quote }}
+  
+  # Dashboard configuration
+  DASHBOARD_TITLE: {{ .Values.config.dashboard.title | quote }}
+  DASHBOARD_REFRESH_INTERVAL: {{ .Values.config.dashboard.refreshInterval | quote }}
+  DASHBOARD_THEME: {{ .Values.config.dashboard.theme | quote }}
+  DASHBOARD_SHOW_DEBUG: {{ .Values.config.dashboard.showDebug | quote }}
+  
+  # Feature flags
+  ENABLE_DEBUG_MODE: {{ .Values.config.features.enableDebugMode | quote }}
+  ENABLE_MOCK_DATA: {{ .Values.config.features.enableMockData | quote }}
+  ENABLE_PERFORMANCE_METRICS: {{ .Values.config.features.enablePerformanceMetrics | quote }}
+  SHOW_DEVELOPER_TOOLS: {{ .Values.config.features.showDeveloperTools | quote }}
+  
+  # Logging configuration
+  LOG_LEVEL: {{ .Values.logging.level | quote }}
+  LOG_FORMAT: {{ .Values.logging.format | quote }}
+  
+  # Application metadata
+  APP_NAME: "metrics-frontend"
+  APP_VERSION: {{ .Chart.AppVersion | quote }}
+  CHART_VERSION: {{ .Chart.Version | quote }}
+  ENVIRONMENT: {{ .Values.environment | quote }}
+  
+  # Frontend specific configuration
+  CORS_ORIGIN: {{ if eq .Values.environment "production" }}{{ .Values.config.api.baseUrl | quote }}{{ else }}"*"{{ end }}
+  
+  # Cache configuration
+  CACHE_CONTROL_MAX_AGE: {{ if eq .Values.environment "production" }}"31536000"{{ else }}"0"{{ end }}
+  
+  # Health check configuration
+  HEALTH_CHECK_ENABLED: "true"
+  HEALTH_CHECK_PATH: "/health"
+  
+  # Dashboard.js configuration
+  dashboard.js: |
+    // Dashboard configuration injected from Helm values
+    window.DASHBOARD_CONFIG = {
+      apiUrl: '{{ .Values.config.api.metricsEndpoint }}',
+      refreshInterval: {{ .Values.config.dashboard.refreshInterval }},
+      webServerName: 'Web-server 1',
+      environment: '{{ .Values.environment }}',
+      title: '{{ .Values.config.dashboard.title }}',
+      theme: '{{ .Values.config.dashboard.theme }}',
+      features: {
+        debugMode: {{ .Values.config.features.enableDebugMode }},
+        mockData: {{ .Values.config.features.enableMockData }},
+        performanceMetrics: {{ .Values.config.features.enablePerformanceMetrics }},
+        developerTools: {{ .Values.config.features.showDeveloperTools }}
+      },
+      colors: {
+        low: '#2ecc71',
+        medium: '#f39c12',
+        high: '#e74c3c'
+      },
+      thresholds: {
+        cpu: {
+          warning: 70,
+          critical: 90
+        },
+        memory: {
+          warning: 80,
+          critical: 95
+        },
+        disk: {
+          warning: 85,
+          critical: 95
+        }
+      }
+    };
+  
+  # Nginx configuration for production optimizations
+  nginx.conf: |
+    server {
+        listen 5173;
+        server_name localhost;
+        root /app;
+        index index.html;
+        
+        # Security headers
+        add_header X-Frame-Options "{{ if eq .Values.environment "production" }}DENY{{ else }}SAMEORIGIN{{ end }}" always;
+        add_header X-Content-Type-Options "nosniff" always;
+        add_header X-XSS-Protection "1; mode=block" always;
+        {{- if eq .Values.environment "production" }}
+        add_header Strict-Transport-Security "max-age=31536000; includeSubDomains" always;
+        {{- end }}
+        add_header Referrer-Policy "strict-origin-when-cross-origin" always;
+        
+        # Gzip compression
+        gzip on;
+        gzip_vary on;
+        gzip_min_length 1024;
+        gzip_types text/plain text/css text/xml text/javascript application/javascript application/xml+rss application/json;
+        
+        # Cache static assets
+        location ~* \.(js|css|png|jpg|jpeg|gif|ico|svg|woff|woff2|ttf|eot)$ {
+            expires {{ if eq .Values.environment "production" }}1y{{ else }}1h{{ end }};
+            add_header Cache-Control "public{{ if eq .Values.environment "production" }}, immutable{{ end }}";
+        }
+        
+        # API proxy
+        location /api/ {
+            proxy_pass {{ .Values.config.api.baseUrl }};
+            proxy_set_header Host $host;
+            proxy_set_header X-Real-IP $remote_addr;
+            proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+            proxy_set_header X-Forwarded-Proto $scheme;
+            proxy_connect_timeout 30s;
+            proxy_send_timeout 30s;
+            proxy_read_timeout 30s;
+        }
+        
+        # Health check
+        location /health {
+            access_log off;
+            return 200 "OK\n";
+            add_header Content-Type text/plain;
+        }
+        
+        # Main application
+        location / {
+            try_files $uri $uri/ /index.html;
+            add_header Cache-Control "no-cache, no-store, must-revalidate";
+            add_header Pragma "no-cache";
+            add_header Expires "0";
+        }
+        
+        # Error pages
+        error_page 404 /index.html;
+        error_page 500 502 503 504 /50x.html;
+        location = /50x.html {
+            root /usr/share/nginx/html;
+        }
+    }

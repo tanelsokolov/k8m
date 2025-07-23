@@ -1,0 +1,49 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ include "metrics-backend.fullname" . }}-config
+  labels:
+    {{- include "metrics-backend.labels" . | nindent 4 }}
+data:
+  # Server configuration
+  PORT: "3000"
+  NODE_ENV: {{ .Values.environment | quote }}
+  
+  # Logging configuration
+  LOG_LEVEL: {{ .Values.logging.level | quote }}
+  LOG_FORMAT: {{ .Values.logging.format | quote }}
+  
+  # Remote servers configuration (WireGuard VPN IPs)
+  REMOTE_SERVERS: |
+    [
+      { "url": "http://192.168.189.102:3000/local-metrics", "name": "web-server-1" },
+      { "url": "http://192.168.189.103:3000/local-metrics", "name": "web-server-2" },
+      { "url": "http://192.168.189.104:3000/local-metrics", "name": "load-balancer" },
+      { "url": "http://192.168.189.105:3000/local-metrics", "name": "cicd-server" }
+    ]
+  
+  # Prometheus configuration
+  PROMETHEUS_METRICS_PATH: "/metrics/prometheus"
+  PROMETHEUS_DEFAULT_LABELS: |
+    {
+      "app": "system-metrics-collector-app",
+      "version": "1.0.0",
+      "environment": "{{ .Values.environment }}"
+    }
+  
+  # Health check configuration
+  HEALTH_CHECK_INTERVAL: "30"
+  HEALTH_CHECK_TIMEOUT: "5"
+  
+  # Metrics collection configuration
+  METRICS_UPDATE_INTERVAL: "15"
+  METRICS_COLLECTION_TIMEOUT: "5"
+  
+  # CORS configuration
+  CORS_ORIGIN: {{ .Values.cors.origin | quote }}
+  CORS_METHODS: {{ .Values.cors.methods | quote }}
+  
+  # Application metadata
+  APP_NAME: "metrics-backend"
+  APP_VERSION: {{ .Chart.AppVersion | quote }}
+  CHART_VERSION: {{ .Chart.Version | quote }}

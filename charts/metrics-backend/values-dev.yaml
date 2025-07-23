@@ -1,0 +1,43 @@
+# Development environment values for metrics-backend
+
+replicaCount: 1
+
+image:
+  repository: metrics-backend
+  pullPolicy: Always
+  tag: "dev"
+
+env:
+  NODE_ENV: "development"
+  PORT: "3000"
+
+resources:
+  limits:
+    cpu: 200m
+    memory: 256Mi
+  requests:
+    cpu: 50m
+    memory: 64Mi
+
+service:
+  type: NodePort
+  nodePort: 30300
+
+ingress:
+  enabled: true
+  className: "nginx"
+  annotations:
+    nginx.ingress.kubernetes.io/rewrite-target: /
+  hosts:
+    - host: metrics-backend-dev.local
+      paths:
+        - path: /
+          pathType: Prefix
+
+healthCheck:
+  initialDelaySeconds: 20
+  readinessInitialDelaySeconds: 10
+
+# Development debugging
+podAnnotations:
+  env: "development"

@@ -1,0 +1,108 @@
+{{- if .Values.ingress.enabled }}
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: {{ include "metrics-backend.fullname" . }}
+  labels:
+    {{- include "metrics-backend.labels" . | nindent 4 }}
+  {{- with .Values.ingress.annotations }}
+  annotations:
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
+spec:
+  {{- if and .Values.ingress.className (not (hasKey .Values.ingress.annotations "kubernetes.io/ingress.class")) }}
+  ingressClassName: {{ .Values.ingress.className }}
+  {{- end }}
+  {{- if .Values.ingress.tls }}
+  tls:
+    {{- range .Values.ingress.tls }}
+    - hosts:
+        {{- range .hosts }}
+        - {{ . | quote }}
+        {{- end }}
+      secretName: {{ .secretName }}
+    {{- end }}
+  {{- end }}
+  rules:
+    {{- range .Values.ingress.hosts }}
+    - host: {{ .host | quote }}
+      http:
+        paths:
+          {{- range .paths }}
+          - path: {{ .path }}
+            {{- if and .pathType (semverCompare ">=1.18-0" $.Capabilities.KubeVersion.GitVersion) }}
+            pathType: {{ .pathType }}
+            {{- end }}
+            backend:
+              {{- if semverCompare ">=1.19-0" $.Capabilities.KubeVersion.GitVersion }}
+              service:
+                name: {{ include "metrics-backend.fullname" $ }}
+                port:
+                  number: {{ $.Values.service.port }}
+              {{- else }}
+              serviceName: {{ include "metrics-backend.fullname" $ }}
+              servicePort: {{ $.Values.service.port }}
+              {{- end }}
+          {{- end }}
+    {{- end }}
+---
+{{- if .Values.ingress.monitoring.enabled }}
+# Separate ingress for monitoring endpoints (Prometheus)
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: {{ include "metrics-backend.fullname" . }}-monitoring
+  labels:
+    {{- include "metrics-backend.labels" . | nindent 4 }}
+    component: monitoring
+  annotations:
+    # Basic auth for monitoring endpoints
+    nginx.ingress.kubernetes.io/auth-type: basic
+    nginx.ingress.kubernetes.io/auth-secret: {{ include "metrics-backend.fullname" . }}-monitoring-auth
+    nginx.ingress.kubernetes.io/auth-realm: 'Metrics Monitoring'
+    # Rate limiting for monitoring endpoints
+    nginx.ingress.kubernetes.io/rate-limit-rps: "10"
+    {{- with .Values.ingress.monitoring.annotations }}
+    {{- toYaml . | nindent 4 }}
+    {{- end }}
+spec:
+  {{- if .Values.ingress.className }}
+  ingressClassName: {{ .Values.ingress.className }}
+  {{- end }}
+  {{- if .Values.ingress.monitoring.tls }}
+  tls:
+    {{- range .Values.ingress.monitoring.tls }}
+    - hosts:
+        {{- range .hosts }}
+        - {{ . | quote }}
+        {{- end }}
+      secretName: {{ .secretName }}
+    {{- end }}
+  {{- end }}
+  rules:
+    - host: {{ .Values.ingress.monitoring.host | quote }}
+      http:
+        paths:
+          - path: /metrics/prometheus
+            pathType: Exact
+            backend:
+              service:
+                name: {{ include "metrics-backend.fullname" . }}
+                port:
+                  number: {{ .Values.service.port }}
+          - path: /health
+            pathType: Exact
+            backend:
+              service:
+                name: {{ include "metrics-backend.fullname" . }}
+                port:
+                  number: {{ .Values.service.port }}
+          - path: /health/detailed
+            pathType: Exact
+            backend:
+              service:
+                name: {{ include "metrics-backend.fullname" . }}
+                port:
+                  number: {{ .Values.service.port }}
+{{- end }}
+{{- end }}
