@@ -43,6 +43,9 @@ ingress:
           pathType: Prefix
   tls: []
 
+logging:
+  level: info
+
 
 resources:
   limits:
