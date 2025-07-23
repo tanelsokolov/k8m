@@ -80,7 +80,21 @@ backend:
 
 # ConfigMap data for frontend configuration
 config:
-  # Add any frontend-specific configuration here
+  api:
+    baseUrl: "http://metrics-backend.default.svc.cluster.local:5173"
+    metricsEndpoint: "/metrics"
+    timeout: "5000"
+  dashboard:
+    title: "Metrics Dashboard"
+    refreshInterval: 30000
+    theme: "dark"
+    showDebug: false
+  features:
+    enableDebugMode: false
+    enableMockData: false
+    enablePerformanceMetrics: true
+    showDeveloperTools: false
+
 
 # Health check settings
 healthCheck:
