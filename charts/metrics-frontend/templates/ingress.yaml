@@ -7,13 +7,11 @@ metadata:
   labels:
     {{- include "metrics-frontend.labels" . | nindent 4 }}
   annotations:
-    {{- if .Values.ingress.className }}
-    kubernetes.io/ingress.class: {{ .Values.ingress.className | quote }}
-    {{- end }}
     {{- with .Values.ingress.annotations }}
     {{ toYaml . | nindent 4 }}
     {{- end }}
 spec:
+  ingressClassName: {{ .Values.ingress.className | quote }}
   {{- if .Values.ingress.tls }}
   tls:
   {{- range .Values.ingress.tls }}
@@ -32,11 +30,11 @@ spec:
       {{- range .paths }}
       - path: {{ .path | quote }}
         pathType: {{ .pathType | default "Prefix" | quote }}
-        backend:
+        frontend:
           service:
-            name: {{ $.Values.backend.serviceName }}
+            name: {{ $.Values.frontend.serviceName }}
             port:
-              number: {{ $.Values.backend.servicePort }}
+              number: {{ $.Values.frontend.servicePort }}
       {{- end }}
   {{- end }}
 {{- end }}

@@ -31,7 +31,7 @@ service:
   nodePort: 30173
 
 ingress:
-  enabled: false
+  enabled: true
   monitoring:
     enabled: false
   className: "nginx"
@@ -70,9 +70,9 @@ env:
   PORT: "5173"
   NODE_ENV: "production"
 
-# Backend service configuration
-backend:
-  serviceName: "metrics-backend"
+# frontend service configuration
+frontend:
+  serviceName: "metrics-frontend"
   servicePort: 5173
   # For dev: use external IP, for prod: use internal service
   externalUrl: "http://192.168.189.101"
@@ -81,7 +81,7 @@ backend:
 # ConfigMap data for frontend configuration
 config:
   api:
-    baseUrl: "http://metrics-backend.default.svc.cluster.local:5173"
+    baseUrl: "http://metrics-frontend.default.svc.cluster.local:5173"
     metricsEndpoint: "/metrics"
     timeout: "5000"
   dashboard:
