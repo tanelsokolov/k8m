@@ -36,6 +36,8 @@ service:
 
 ingress:
   enabled: false
+  monitoring:
+    enabled: false
   className: ""
   annotations: {}
   hosts:
@@ -44,6 +46,7 @@ ingress:
         - path: /
           pathType: Prefix
   tls: []
+
 
 resources:
   limits:
