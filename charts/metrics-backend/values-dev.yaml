@@ -34,6 +34,10 @@ ingress:
         - path: /
           pathType: Prefix
 
+logging:
+  level: info
+
+
 healthCheck:
   initialDelaySeconds: 20
   readinessInitialDelaySeconds: 10
