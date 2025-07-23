@@ -50,6 +50,9 @@ ingress:
 logging:
 level: info
 
+cors:
+  origin: "*"
+
 resources:
   limits:
     cpu: 500m

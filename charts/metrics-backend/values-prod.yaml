@@ -42,6 +42,8 @@ ingress:
 logging:
   level: info
 
+cors:
+  origin: "*"
 
 # Enable autoscaling in production
 autoscaling:

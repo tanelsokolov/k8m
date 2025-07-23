@@ -37,6 +37,8 @@ ingress:
 logging:
   level: info
 
+cors:
+  origin: "*"
 
 healthCheck:
   initialDelaySeconds: 20

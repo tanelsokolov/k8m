@@ -38,10 +38,12 @@ ingress:
     - secretName: metrics-backend-tls
       hosts:
         - metrics-backend.company.com
-        
+
 logging:
   level: info
 
+cors:
+  origin: "*"
 
 # Enable autoscaling in production
 autoscaling:
