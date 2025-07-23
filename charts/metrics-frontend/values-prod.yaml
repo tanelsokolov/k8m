@@ -19,7 +19,7 @@ resources:
 
 service:
   type: NodePort
-  nodePort: 30301
+  nodePort: 30303
 
 ingress:
   enabled: true
