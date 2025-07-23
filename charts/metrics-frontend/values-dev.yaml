@@ -1,5 +1,3 @@
-# Development environment values for metrics-backend
-
 replicaCount: 1
 
 image:
@@ -36,6 +34,7 @@ ingress:
 
 logging:
   level: info
+  format: "json"
 
 cors:
   origin: "*"
@@ -44,6 +43,23 @@ healthCheck:
   initialDelaySeconds: 20
   readinessInitialDelaySeconds: 10
 
-# Development debugging
 podAnnotations:
   env: "development"
+
+config:
+  api:
+    baseUrl: "http://metrics-backend-dev.monitoring-dev.svc.cluster.local:3000"
+    metricsEndpoint: "/metrics"
+    timeout: "5000"
+
+  dashboard:
+    title: "Metrics Dashboard"
+    refreshInterval: "60000"
+    theme: "light"
+    showDebug: "true"
+
+  features:
+    enableDebugMode: "true"
+    enableMockData: "false"
+    enablePerformanceMetrics: "true"
+    showDeveloperTools: "false"

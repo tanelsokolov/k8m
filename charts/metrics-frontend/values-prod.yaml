@@ -1,10 +1,8 @@
-# Production environment values for metrics-backend
-
-replicaCount: 2
+replicaCount: 1
 
 image:
   repository: tanelsokolov/metrics-frontend
-  pullPolicy: IfNotPresent
+  pullPolicy: Always
   tag: "latest"
 
 env:
@@ -13,53 +11,55 @@ env:
 
 resources:
   limits:
-    cpu: 500m
-    memory: 512Mi
+    cpu: 200m
+    memory: 256Mi
   requests:
-    cpu: 100m
-    memory: 128Mi
+    cpu: 50m
+    memory: 64Mi
 
 service:
-  type: ClusterIP
-  nodePort: 30301
+  type: NodePort
+  nodePort: 30300
 
 ingress:
   enabled: true
   className: "nginx"
   annotations:
     nginx.ingress.kubernetes.io/rewrite-target: /
-    cert-manager.io/cluster-issuer: "letsencrypt-prod"
   hosts:
-    - host: metrics-frontend.company.com
+    - host: metrics-backend-prod.local
       paths:
         - path: /
           pathType: Prefix
-  tls:
-    - secretName: metrics-backend-tls
-      hosts:
-        - metrics-backend.company.com
 
 logging:
   level: info
+  format: "json"
 
 cors:
   origin: "*"
 
-# Enable autoscaling in production
-autoscaling:
-  enabled: true
-  minReplicas: 2
-  maxReplicas: 10
-  targetCPUUtilizationPercentage: 70
-  targetMemoryUtilizationPercentage: 80
+healthCheck:
+  initialDelaySeconds: 20
+  readinessInitialDelaySeconds: 10
 
-# Enable PDB for high availability
-podDisruptionBudget:
-  enabled: true
-  minAvailable: 1
-
-# Production monitoring annotations
 podAnnotations:
-  prometheus.io/scrape: "true"
-  prometheus.io/port: "3000"
-  prometheus.io/path: "/metrics"
+  env: "development"
+
+config:
+  api:
+    baseUrl: "http://metrics-backend-prod.monitoring-prod.svc.cluster.local:3000"
+    metricsEndpoint: "/metrics"
+    timeout: "5000"
+
+  dashboard:
+    title: "Metrics Dashboard"
+    refreshInterval: "60000"
+    theme: "light"
+    showDebug: "true"
+
+  features:
+    enableDebugMode: "true"
+    enableMockData: "false"
+    enablePerformanceMetrics: "true"
+    showDeveloperTools: "false"
