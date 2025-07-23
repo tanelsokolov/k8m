@@ -31,10 +31,10 @@ service:
   nodePort: 30173
 
 ingress:
-  enabled: false
+  enabled: true
   monitoring:
     enabled: false
-  className: ""
+  className: "nginx"
   annotations: {}
   hosts:
     - host: metrics-backend.local
