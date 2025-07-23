@@ -21,6 +21,11 @@ service:
   type: NodePort
   nodePort: 30303
 
+frontend:
+  serviceName: metrics-frontend-prod
+  servicePort: 5173
+
+
 ingress:
   enabled: true
   className: "nginx"
