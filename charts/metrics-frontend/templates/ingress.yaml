@@ -30,7 +30,7 @@ spec:
       {{- range .paths }}
       - path: {{ .path | quote }}
         pathType: {{ .pathType | default "Prefix" | quote }}
-        frontend:
+        backend:
           service:
             name: {{ $.Values.frontend.serviceName }}
             port:
