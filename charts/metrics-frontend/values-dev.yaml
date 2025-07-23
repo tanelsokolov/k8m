@@ -7,7 +7,7 @@ image:
 
 env:
   NODE_ENV: "development"
-  PORT: "3000"
+  PORT: "5173"
 
 resources:
   limits:
@@ -51,7 +51,7 @@ podAnnotations:
 
 config:
   api:
-    baseUrl: "http://metrics-backend-dev.monitoring-dev.svc.cluster.local:3000"
+    baseUrl: "http://metrics-frontend-dev.monitoring-dev.svc.cluster.local:5173"
     metricsEndpoint: "/metrics"
     timeout: "5000"
 

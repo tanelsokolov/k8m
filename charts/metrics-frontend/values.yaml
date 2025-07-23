@@ -75,7 +75,7 @@ env:
 # Backend service configuration
 backend:
   serviceName: "metrics-backend"
-  servicePort: 3000
+  servicePort: 5173
   # For dev: use external IP, for prod: use internal service
   externalUrl: "http://192.168.189.101"
   useInternalService: false
