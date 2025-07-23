@@ -7,7 +7,7 @@ metadata:
 data:
   # Server configuration
   PORT: "3000"
-  NODE_ENV: {{ .Values.environment | quote }}
+  NODE_ENV: {{ .Values.env.NODE_ENV | quote }}
   
   # Logging configuration
   LOG_LEVEL: {{ .Values.logging.level | quote }}

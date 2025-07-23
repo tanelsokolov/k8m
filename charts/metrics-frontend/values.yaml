@@ -51,8 +51,6 @@ cors:
   origin: "*"
   methods: "GET,POST,PUT,DELETE,OPTIONS"
 
-NODE_ENV: production
-
 resources:
   limits:
     cpu: 200m

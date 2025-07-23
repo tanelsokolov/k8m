@@ -7,7 +7,7 @@ metadata:
 data:
   # Server configuration
   PORT: "5173"
-  NODE_ENV: {{ .Values.environment | quote }}
+  NODE_ENV: {{ .Values.env.NODE_ENV | quote }}
   
   # API configuration
   API_BASE_URL: {{ .Values.config.api.baseUrl | quote }}
