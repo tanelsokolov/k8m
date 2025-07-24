@@ -4,8 +4,8 @@ metadata:
   name: {{ .Values.service.name }}
 subsets:
   - addresses:
-    {{- range .Values.backendEndpoints }}
-    - ip: {{ .ip }}
-    {{- end }}
+      {{- range .Values.backendEndpoints }}
+      - ip: {{ .ip }}
+      {{- end }}
     ports:
-      - port: {{ .Values.backendEndpoints.port | default 5173 }}
+      - port: {{ (index .Values.backendEndpoints 0).port | default 5173 }}
