@@ -8,7 +8,7 @@ metadata:
     {{- include "metrics-frontend.labels" . | nindent 4 }}
   annotations:
     {{- with .Values.ingress.annotations }}
-    {{ toYaml . | nindent 4 }}
+    {{- toYaml . | nindent 4 }}
     {{- end }}
 spec:
   ingressClassName: {{ .Values.ingress.className | quote }}
@@ -32,9 +32,9 @@ spec:
         pathType: {{ .pathType | default "Prefix" | quote }}
         backend:
           service:
-            name: {{ $.Values.frontend.serviceName }}
+            name: {{ include "metrics-frontend.fullname" $ }}
             port:
-              number: {{ $.Values.frontend.servicePort }}
+              number: {{ $.Values.service.port }}
       {{- end }}
   {{- end }}
 {{- end }}

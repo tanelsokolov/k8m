@@ -45,7 +45,7 @@ spec:
             {{- end }}
             {{- if .Values.frontend.useInternalService }}
             - name: FRONTEND_URL
-              value: "http://{{ .Values.frotend.serviceName }}:{{ .Values.frontend.servicePort }}"
+              value: "http://{{ .Values.frontend.serviceName }}:{{ .Values.frontend.servicePort }}"
             {{- else }}
             - name: FRONTEND_URL
               value: {{ .Values.frontend.externalUrl | quote }}

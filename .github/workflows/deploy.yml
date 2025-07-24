@@ -3,13 +3,13 @@ name: Build and Push Docker Images
 on:
   push:
     branches:
-      - main  # või oma haru, mida kasutad 
-    
-jobs:
-  build-and-push:
-    runs-on: ubuntu-latest
-    if: contains(github.event.head_commit.message, 'deploy dev') || contains(github.event.head_commit.message, 'deploy prod')
+      - main
 
+jobs:
+  build-dev:
+    runs-on: ubuntu-latest
+    if: contains(github.event.head_commit.message, 'deploy dev') || contains(github.event.head_commit.message, 'deploy both')
+    
     steps:
       - name: Checkout repo
         uses: actions/checkout@v3
@@ -20,12 +20,44 @@ jobs:
           username: ${{ secrets.DOCKER_USERNAME }}
           password: ${{ secrets.DOCKER_PASSWORD }}
 
-      - name: Build and push backend image
+      - name: Build and push dev images
         run: |
-          docker build -t tanelsokolov/metrics-backend:latest ./backend
-          docker push tanelsokolov/metrics-backend:latest
+          # Backend
+          docker build -t tanelsokolov/metrics-backend:dev-latest ./backend
+          docker build -t tanelsokolov/metrics-backend:dev-$(date +%Y%m%d-%H%M%S) ./backend
+          docker push tanelsokolov/metrics-backend:dev-latest
+          docker push tanelsokolov/metrics-backend:dev-$(date +%Y%m%d-%H%M%S)
+          
+          # Frontend
+          docker build -t tanelsokolov/metrics-frontend:dev-latest ./frontend
+          docker build -t tanelsokolov/metrics-frontend:dev-$(date +%Y%m%d-%H%M%S) ./frontend
+          docker push tanelsokolov/metrics-frontend:dev-latest
+          docker push tanelsokolov/metrics-frontend:dev-$(date +%Y%m%d-%H%M%S)
 
-      - name: Build and push frontend image
+  build-prod:
+    runs-on: ubuntu-latest
+    if: contains(github.event.head_commit.message, 'deploy prod') || contains(github.event.head_commit.message, 'deploy both')
+    
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v3
+
+      - name: Log in to Docker Hub
+        uses: docker/login-action@v2
+        with:
+          username: ${{ secrets.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKER_PASSWORD }}
+
+      - name: Build and push prod images
         run: |
-          docker build -t tanelsokolov/metrics-frontend:latest ./frontend
-          docker push tanelsokolov/metrics-frontend:latest
+          # Backend
+          docker build -t tanelsokolov/metrics-backend:prod-latest ./backend
+          docker build -t tanelsokolov/metrics-backend:prod-$(date +%Y%m%d-%H%M%S) ./backend
+          docker push tanelsokolov/metrics-backend:prod-latest
+          docker push tanelsokolov/metrics-backend:prod-$(date +%Y%m%d-%H%M%S)
+          
+          # Frontend
+          docker build -t tanelsokolov/metrics-frontend:prod-latest ./frontend
+          docker build -t tanelsokolov/metrics-frontend:prod-$(date +%Y%m%d-%H%M%S) ./frontend
+          docker push tanelsokolov/metrics-frontend:prod-latest
+          docker push tanelsokolov/metrics-frontend:prod-$(date +%Y%m%d-%H%M%S)

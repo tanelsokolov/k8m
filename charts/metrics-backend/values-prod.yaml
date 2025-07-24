@@ -5,7 +5,7 @@ replicaCount: 2
 image:
   repository: tanelsokolov/metrics-backend
   pullPolicy: IfNotPresent
-  tag: "latest"
+  tag: "prod-latest"
 
 env:
   NODE_ENV: "production"
@@ -28,16 +28,11 @@ ingress:
   className: "nginx"
   annotations:
     nginx.ingress.kubernetes.io/rewrite-target: /
-    cert-manager.io/cluster-issuer: "letsencrypt-prod"
   hosts:
-    - host: metrics-backend.company.com
+    - host: metrics-backend-prod.local
       paths:
         - path: /
           pathType: Prefix
-  tls:
-    - secretName: metrics-backend-tls
-      hosts:
-        - metrics-backend.company.com
 
 logging:
   level: info
