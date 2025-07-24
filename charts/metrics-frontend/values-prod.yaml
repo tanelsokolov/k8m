@@ -70,6 +70,3 @@ config:
     enableMockData: "false"
     enablePerformanceMetrics: "true"
     showDeveloperTools: "false"
-
-loadBalancer:
-  enabled: true
