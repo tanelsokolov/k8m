@@ -4,7 +4,7 @@
 const config = {
     apiUrl: '/api/metrics', // API endpoint to fetch metrics
     refreshInterval: 1000, // Update every 1 second
-    webServerName: 'Web-server 1',
+    webServerName: 'Production',
     colors: {
       low: '#2ecc71',    // Green
       medium: '#f39c12', // Orange
