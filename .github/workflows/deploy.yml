@@ -20,19 +20,23 @@ jobs:
           username: ${{ secrets.DOCKER_USERNAME }}
           password: ${{ secrets.DOCKER_PASSWORD }}
 
+      - name: Generate timestamp
+        id: timestamp
+        run: echo "timestamp=$(date +%Y%m%d-%H%M%S)" >> $GITHUB_OUTPUT
+
       - name: Build and push dev images
+        env:
+          TIMESTAMP: ${{ steps.timestamp.outputs.timestamp }}
         run: |
           # Backend
-          docker build -t tanelsokolov/metrics-backend:dev-latest ./backend
-          docker build -t tanelsokolov/metrics-backend:dev-$(date +%Y%m%d-%H%M%S) ./backend
+          docker build -t tanelsokolov/metrics-backend:dev-latest -t tanelsokolov/metrics-backend:dev-${TIMESTAMP} ./backend
           docker push tanelsokolov/metrics-backend:dev-latest
-          docker push tanelsokolov/metrics-backend:dev-$(date +%Y%m%d-%H%M%S)
+          docker push tanelsokolov/metrics-backend:dev-${TIMESTAMP}
           
           # Frontend
-          docker build -t tanelsokolov/metrics-frontend:dev-latest ./frontend
-          docker build -t tanelsokolov/metrics-frontend:dev-$(date +%Y%m%d-%H%M%S) ./frontend
+          docker build -t tanelsokolov/metrics-frontend:dev-latest -t tanelsokolov/metrics-frontend:dev-${TIMESTAMP} ./frontend
           docker push tanelsokolov/metrics-frontend:dev-latest
-          docker push tanelsokolov/metrics-frontend:dev-$(date +%Y%m%d-%H%M%S)
+          docker push tanelsokolov/metrics-frontend:dev-${TIMESTAMP}
 
   build-prod:
     runs-on: ubuntu-latest
@@ -48,16 +52,20 @@ jobs:
           username: ${{ secrets.DOCKER_USERNAME }}
           password: ${{ secrets.DOCKER_PASSWORD }}
 
+      - name: Generate timestamp
+        id: timestamp
+        run: echo "timestamp=$(date +%Y%m%d-%H%M%S)" >> $GITHUB_OUTPUT
+
       - name: Build and push prod images
+        env:
+          TIMESTAMP: ${{ steps.timestamp.outputs.timestamp }}
         run: |
           # Backend
-          docker build -t tanelsokolov/metrics-backend:prod-latest ./backend
-          docker build -t tanelsokolov/metrics-backend:prod-$(date +%Y%m%d-%H%M%S) ./backend
+          docker build -t tanelsokolov/metrics-backend:prod-latest -t tanelsokolov/metrics-backend:prod-${TIMESTAMP} ./backend
           docker push tanelsokolov/metrics-backend:prod-latest
-          docker push tanelsokolov/metrics-backend:prod-$(date +%Y%m%d-%H%M%S)
+          docker push tanelsokolov/metrics-backend:prod-${TIMESTAMP}
           
           # Frontend
-          docker build -t tanelsokolov/metrics-frontend:prod-latest ./frontend
-          docker build -t tanelsokolov/metrics-frontend:prod-$(date +%Y%m%d-%H%M%S) ./frontend
+          docker build -t tanelsokolov/metrics-frontend:prod-latest -t tanelsokolov/metrics-frontend:prod-${TIMESTAMP} ./frontend
           docker push tanelsokolov/metrics-frontend:prod-latest
-          docker push tanelsokolov/metrics-frontend:prod-$(date +%Y%m%d-%H%M%S)
+          docker push tanelsokolov/metrics-frontend:prod-${TIMESTAMP}
