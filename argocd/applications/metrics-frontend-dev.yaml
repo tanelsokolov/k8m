@@ -3,6 +3,21 @@ kind: Application
 metadata:
   name: metrics-frontend-dev
   namespace: argocd
+  annotations:
+    # Image Updater konfiguratsiooni annotaatsioonid
+    argocd-image-updater.argoproj.io/image-list: frontend=tanelsokolov/metrics-frontend
+    argocd-image-updater.argoproj.io/write-back-method: git
+    argocd-image-updater.argoproj.io/git-branch: main
+    
+    # Dev timestamp-based versioning
+    argocd-image-updater.argoproj.io/frontend.update-strategy: latest
+    argocd-image-updater.argoproj.io/frontend.allow-tags: regexp:^dev-[0-9]{8}-[0-9]{6}$
+    argocd-image-updater.argoproj.io/frontend.ignore-tags: latest,prod-latest,prod-.*
+    
+    # Git commit seaded
+    argocd-image-updater.argoproj.io/git-commit-user: argocd-image-updater
+    argocd-image-updater.argoproj.io/git-commit-email: argocd-image-updater@tanelsokolov.dev
+    argocd-image-updater.argoproj.io/git-commit-message: "chore: update {{.AppName}} frontend dev image to {{.NewTag}}"
 spec:
   project: default
   source:
@@ -19,3 +34,5 @@ spec:
     automated:
       prune: true
       selfHeal: true
+    syncOptions:
+    - CreateNamespace=true

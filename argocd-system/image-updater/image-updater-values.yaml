@@ -1,0 +1,45 @@
+﻿# ArgoCD Image Updater konfiguratsiooni väärtused
+image:
+  repository: quay.io/argoprojlabs/argocd-image-updater
+  tag: v0.12.2
+  pullPolicy: Always
+
+config:
+  # ArgoCD serveri ühenduse seaded
+  argocd.grpc_web: true
+  argocd.server_addr: argocd-server.argocd.svc.cluster.local:443
+  argocd.insecure: false
+  argocd.plaintext: false
+
+  auth:
+  argocd:
+    type: token
+    token: argocd.token
+  
+  # Git repository seaded
+  git.commit_user: argocd-image-updater
+  git.commit_email: argocd-image-updater@tanelsokolov.dev
+  git.commit_message_template: |
+    build: automatic update of {{ .AppName }}
+    
+    {{ range .AppChanges -}}
+    updates image {{ .Image }} tag '{{ .OldTag }}' to '{{ .NewTag }}'
+    {{ end -}}
+
+# RBAC õigused
+rbac:
+  enabled: true
+
+serviceAccount:
+  create: true
+  name: argocd-image-updater
+
+# Logimise tase
+logLevel: info
+
+# Registry seaded
+registries:
+  - name: Docker Hub
+    prefix: docker.io
+    api_url: https://registry-1.docker.io
+    default: true

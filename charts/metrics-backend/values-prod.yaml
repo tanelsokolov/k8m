@@ -5,7 +5,8 @@ replicaCount: 2
 image:
   repository: tanelsokolov/metrics-backend
   pullPolicy: Always
-  tag: "prod-latest"
+  # Image Updater uuendab seda automaatselt timestamp tag'iga
+  tag: "prod-20250724-120000"  # Näide: prod-YYYYMMDD-HHMMSS
 
 env:
   NODE_ENV: "production"
@@ -42,7 +43,6 @@ cors:
   origin: "*"
   methods: "GET,POST,PUT,DELETE,OPTIONS"
 
-
 # Enable autoscaling in production
 autoscaling:
   enabled: true
@@ -61,3 +61,6 @@ podAnnotations:
   prometheus.io/scrape: "true"
   prometheus.io/port: "3000"
   prometheus.io/path: "/metrics"
+  # Image versiooni märgistamine
+  image.version: "prod-20250724-120000"
+  updated.by: "argocd-image-updater"

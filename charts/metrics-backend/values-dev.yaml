@@ -5,7 +5,8 @@ replicaCount: 1
 image:
   repository: tanelsokolov/metrics-backend
   pullPolicy: Always
-  tag: "dev-latest"
+  # Image Updater uuendab seda automaatselt timestamp tag'iga
+  tag: "dev-20250724-120000"
 
 env:
   NODE_ENV: "development"
@@ -35,7 +36,7 @@ ingress:
           pathType: Prefix
 
 logging:
-  level: info
+  level: debug
   format: json
 
 cors:
@@ -49,3 +50,5 @@ healthCheck:
 # Development debugging
 podAnnotations:
   env: "development"
+  image.version: "dev-20250724-120000"
+  updated.by: "argocd-image-updater"
