@@ -21,6 +21,7 @@ resources:
 
 service:
   type: ClusterIP
+  nodePort: 30300
 
 ingress:
   enabled: true

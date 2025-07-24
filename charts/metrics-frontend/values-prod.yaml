@@ -20,6 +20,7 @@ resources:
 
 service:
   type: ClusterIP
+  nodePort: 30303
 
 frontend:
   serviceName: metrics-frontend-prod
