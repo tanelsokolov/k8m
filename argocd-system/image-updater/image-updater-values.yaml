@@ -10,11 +10,13 @@ config:
   argocd.server_addr: argocd-server.argocd.svc.cluster.local:443
   argocd.insecure: false
   argocd.plaintext: false
-
+  
   auth:
-  argocd:
-    type: token
-    token: argocd.token
+    argocd:
+      type: token
+      tokenFromSecret:
+        name: argocd-image-updater-secret
+        key: token
   
   # Git repository seaded
   git.commit_user: argocd-image-updater
