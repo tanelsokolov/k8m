@@ -34,7 +34,7 @@ data:
   APP_NAME: "metrics-frontend"
   APP_VERSION: {{ .Chart.AppVersion | quote }}
   CHART_VERSION: {{ .Chart.Version | quote }}
-  ENVIRONMENT: {{ .Values.environment | quote }}
+  ENVIRONMENT: {{ .Values.env.NODE_ENV | quote}}
   
   # Frontend specific configuration
   CORS_ORIGIN: {{ if eq .Values.environment "production" }}{{ .Values.config.api.baseUrl | quote }}{{ else }}"*"{{ end }}
