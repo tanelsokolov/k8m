@@ -8,6 +8,7 @@ image:
 env:
   NODE_ENV: "production"
   PORT: "5173"
+  BACKEND_URL: "http://metrics-backend-prod.monitoring-prod.svc.cluster.local:3000"
 
 resources:
   limits:
@@ -18,8 +19,7 @@ resources:
     memory: 64Mi
 
 service:
-  type: NodePort
-  nodePort: 30303
+  type: ClusterIP
 
 frontend:
   serviceName: metrics-frontend-prod

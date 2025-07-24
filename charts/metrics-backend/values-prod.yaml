@@ -4,7 +4,7 @@ replicaCount: 2
 
 image:
   repository: tanelsokolov/metrics-backend
-  pullPolicy: IfNotPresent
+  pullPolicy: Always
   tag: "prod-latest"
 
 env:
@@ -21,7 +21,7 @@ resources:
 
 service:
   type: ClusterIP
-  nodePort: 30301
+
 
 ingress:
   enabled: true

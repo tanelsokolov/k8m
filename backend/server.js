@@ -350,10 +350,10 @@ app.get('/metrics', async (req, res) => {
       
       // Configuration for remote servers using WireGuard VPN IPs
       const servers = [
-        { url: 'http://192.168.189.102:3000/local-metrics' }, // web-server-1
-        { url: 'http://192.168.189.103:3000/local-metrics' }, // web-server-2
-        { url: 'http://192.168.189.104:3000/local-metrics' },  // load-balancer
-        { url: 'http://192.168.189.105:3000/local-metrics' },  // cicd server
+       // { url: 'http://192.168.189.102:3000/local-metrics' }, // web-server-1
+      //  { url: 'http://192.168.189.103:3000/local-metrics' }, // web-server-2
+       // { url: 'http://192.168.189.104:3000/local-metrics' },  // load-balancer
+      //  { url: 'http://192.168.189.105:3000/local-metrics' },  // cicd server
         // test full app server down
       ];
       

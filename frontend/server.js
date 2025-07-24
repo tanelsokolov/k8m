@@ -14,7 +14,8 @@ const PORT = process.env.PORT || 5173;
 // Proxy /api/metrics to backend metrics endpoint
 app.get('/api/metrics', async (req, res) => {
   try {
-    const response = await axios.get('http://192.168.189.101/metrics');
+    const backendUrl = process.env.BACKEND_URL;
+    const response = await axios.get(`${backendUrl}/metrics`);
     res.json(response.data);
   } catch (error) {
     console.error('Error fetching metrics:', error.message);
