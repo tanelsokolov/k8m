@@ -16,8 +16,8 @@ ingress:
           pathType: Prefix
 
 backendEndpoints:
-  - ip: 10.244.0.5
-  - ip: 10.244.0.7
+  - ip: 10.244.0.28
+  - ip: 10.244.0.29
     port: 5173
 
 resources: {}
