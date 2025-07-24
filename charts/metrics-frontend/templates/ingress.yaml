@@ -30,11 +30,16 @@ spec:
       {{- range .paths }}
       - path: {{ .path | quote }}
         pathType: {{ .pathType | default "Prefix" | quote }}
+        {{- if .backend }}
+        backend:
+          {{- toYaml .backend | nindent 10 }}
+        {{- else }}
         backend:
           service:
             name: {{ include "metrics-frontend.fullname" $ }}
             port:
               number: {{ $.Values.service.port }}
+        {{- end }}
       {{- end }}
   {{- end }}
 {{- end }}
