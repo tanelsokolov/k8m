@@ -1,0 +1,23 @@
+replicaCount: 1
+
+service:
+  name: metrics-frontend-lb
+  port: 80
+  targetPort: 5173
+
+ingress:
+  enabled: true
+  className: nginx
+  annotations: {}
+  hosts:
+    - host: metrics-frontend.local
+      paths:
+        - path: /
+          pathType: Prefix
+
+backendEndpoints:
+  - ip: 10.244.0.5
+  - ip: 10.244.0.7
+    port: 5173
+
+resources: {}
