@@ -119,3 +119,16 @@ autoscaling:
 podDisruptionBudget:
   enabled: false
   minAvailable: 1
+
+# Load Balancer Ingress configuration
+loadBalancer:
+  enabled: false
+  name: metrics-frontend-lb
+  host: metrics-frontend.local
+  annotations:
+    nginx.ingress.kubernetes.io/service-upstream: "true"
+  backends:
+    - name: metrics-frontend-dev
+      port: 5173
+    - name: metrics-frontend-prod
+      port: 5173

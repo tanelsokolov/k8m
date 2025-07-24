@@ -30,16 +30,41 @@ spec:
       {{- range .paths }}
       - path: {{ .path | quote }}
         pathType: {{ .pathType | default "Prefix" | quote }}
-        {{- if .backend }}
-        backend:
-          {{- toYaml .backend | nindent 10 }}
-        {{- else }}
         backend:
           service:
             name: {{ include "metrics-frontend.fullname" $ }}
             port:
               number: {{ $.Values.service.port }}
-        {{- end }}
       {{- end }}
   {{- end }}
+{{- end }}
+
+{{- if .Values.loadBalancer.enabled }}
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: {{ .Values.loadBalancer.name }}
+  namespace: {{ .Release.Namespace }}
+  labels:
+    {{- include "metrics-frontend.labels" . | nindent 4 }}
+  annotations:
+    {{- with .Values.loadBalancer.annotations }}
+    {{- toYaml . | nindent 4 }}
+    {{- end }}
+spec:
+  ingressClassName: {{ .Values.ingress.className | quote }}
+  rules:
+  - host: {{ .Values.loadBalancer.host | quote }}
+    http:
+      paths:
+      {{- range .Values.loadBalancer.backends }}
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: {{ .name }}
+            port:
+              number: {{ .port }}
+      {{- end }}
 {{- end }}
