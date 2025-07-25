@@ -1,7 +1,7 @@
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  name: metrics-frontend
+  name: metrics-frontend-prod
   namespace: argocd
   labels:
     metrics-frontend

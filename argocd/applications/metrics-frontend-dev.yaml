@@ -1,7 +1,7 @@
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  name: metrics-frontend
+  name: metrics-frontend-dev
   namespace: argocd
   annotations:
     # Image Updater konfiguratsiooni annotaatsioonid
