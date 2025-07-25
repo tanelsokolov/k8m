@@ -6,7 +6,7 @@ metadata:
 spec:
   project: default
   source:
-    repoURL: 'https://github.com/YOUR_GITHUB_ORG_OR_USER/YOUR_REPO.git'
+    repoURL: 'https://github.com/tanelsokolov/k8m.git'
     targetRevision: HEAD
     path: charts/metrics-frontend-lb
     helm:
