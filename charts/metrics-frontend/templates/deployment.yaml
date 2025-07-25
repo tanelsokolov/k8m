@@ -4,9 +4,6 @@ metadata:
   name: {{ include "metrics-frontend.fullname" . }}
   labels:
     {{- include "metrics-frontend.labels" . | nindent 4 }}
-    {{- with .Values.labels }}
-    {{- toYaml . | nindent 4 }}
-    {{- end }}
 spec:
   {{- if not .Values.autoscaling.enabled }}
   replicas: {{ .Values.replicaCount }}
@@ -22,9 +19,6 @@ spec:
       {{- end }}
       labels:
         {{- include "metrics-frontend.selectorLabels" . | nindent 8 }}
-        {{- with .Values.labels }}
-        {{- toYaml . | nindent 4 }}
-        {{- end }}
     spec:
       {{- with .Values.imagePullSecrets }}
       imagePullSecrets:

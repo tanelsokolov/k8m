@@ -10,8 +10,6 @@ env:
   PORT: "5173"
   BACKEND_URL: "http://metrics-backend-prod.monitoring-prod.svc.cluster.local:3000"
 
-labels:
-  app: metrics-frontend
 
 resources:
   limits:
