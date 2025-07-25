@@ -10,4 +10,4 @@ endpoints:
 ingress:
   enabled: true
   className: nginx
-  host: metrics-frontend.local 
+  host: metrics-frontend-lb.local 
