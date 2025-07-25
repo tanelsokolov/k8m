@@ -1,10 +1,10 @@
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  name: metrics-frontend-prod
+  name: metrics-frontend
   namespace: argocd
   labels:
-    app: metrics-frontend
+    metrics-frontend
   annotations:
     # Image Updater konfiguratsiooni annotaatsioonid
     argocd-image-updater.argoproj.io/image-list: frontend=tanelsokolov/metrics-frontend

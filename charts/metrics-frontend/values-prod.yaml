@@ -24,7 +24,7 @@ service:
   nodePort: 30303
 
 frontend:
-  serviceName: metrics-frontend-prod
+  serviceName: metrics-frontend
   servicePort: 5173
 
 
