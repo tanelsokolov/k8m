@@ -19,6 +19,9 @@ podAnnotations: {}
 
 podSecurityContext: {}
 
+podLabels:
+  app: metrics-frontend
+
 securityContext:
   runAsNonRoot: true
   runAsUser: 1001
