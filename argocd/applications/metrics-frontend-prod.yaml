@@ -31,7 +31,7 @@ spec:
         - values-prod.yaml
   destination:
     server: https://kubernetes.default.svc
-    namespace: monitoring-prod
+    namespace: monitoring
   syncPolicy:
     automated:
       prune: true

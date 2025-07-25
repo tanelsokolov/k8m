@@ -29,7 +29,7 @@ spec:
         - values-dev.yaml
   destination:
     server: https://kubernetes.default.svc
-    namespace: monitoring-dev
+    namespace: monitoring
   syncPolicy:
     automated:
       prune: true
