@@ -15,4 +15,4 @@ spec:
       nodePort: {{ .Values.service.nodePort }}
       {{- end }}
   selector:
-    app: metrics-frontend
+    {{- include "metrics-frontend.selectorLabels" . | nindent 4 }}
