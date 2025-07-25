@@ -1,0 +1,13 @@
+service:
+  name: metrics-frontend-lb
+  port: 80
+  targetPort: 80
+
+endpoints:
+  - ip: 10.97.133.24
+  - ip: 10.109.187.216
+
+ingress:
+  enabled: true
+  className: nginx
+  host: metrics-frontend.local 
