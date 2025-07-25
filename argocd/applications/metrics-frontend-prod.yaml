@@ -3,8 +3,6 @@ kind: Application
 metadata:
   name: metrics-frontend-prod
   namespace: argocd
-  labels:
-    metrics-frontend
   annotations:
     # Image Updater konfiguratsiooni annotaatsioonid
     argocd-image-updater.argoproj.io/image-list: frontend=tanelsokolov/metrics-frontend
