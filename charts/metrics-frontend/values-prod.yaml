@@ -53,9 +53,6 @@ healthCheck:
 podAnnotations:
   env: "development"
 
-podLabels:
-  app: metrics-frontend
-
 config:
   api:
     baseUrl: "http://metrics-frontend-prod.monitoring-prod.svc.cluster.local:5173"

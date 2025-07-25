@@ -19,9 +19,6 @@ podAnnotations: {}
 
 podSecurityContext: {}
 
-podLabels:
-  app: metrics-frontend
-
 securityContext:
   runAsNonRoot: true
   runAsUser: 1001
@@ -34,13 +31,13 @@ service:
   nodePort: 30173
 
 ingress:
-  enabled: true
+  enabled: false
   monitoring:
     enabled: false
   className: "nginx"
   annotations: {}
   hosts:
-    - host: metrics-frontend-lb.local
+    - host: metrics-frontend.local
       paths:
         - path: /
           pathType: Prefix
