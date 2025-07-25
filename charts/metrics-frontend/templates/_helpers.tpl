@@ -48,6 +48,7 @@ Selector labels
 {{- define "metrics-frontend.selectorLabels" -}}
 app.kubernetes.io/name: {{ include "metrics-frontend.name" . }}
 app.kubernetes.io/instance: {{ .Release.Name }}
+metrics-frontend
 {{- end }}
 
 {{/*
