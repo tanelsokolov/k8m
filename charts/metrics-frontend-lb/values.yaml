@@ -1,5 +1,5 @@
 service:
-  name: metrics-frontend-lb
+  name: metrics-frontend
   port: 80
   targetPort: 5173
   type: ClusterIP
