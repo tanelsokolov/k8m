@@ -31,7 +31,7 @@ service:
   nodePort: 30173
 
 ingress:
-  enabled: true
+  enabled: false
   monitoring:
     enabled: false
   className: "nginx"
