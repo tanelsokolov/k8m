@@ -6,7 +6,7 @@ metadata:
 spec:
   project: default
   source:
-    repoURL: 'https://github.com/your-org/your-repo.git' # Update this to your repo
+    repoURL: 'https://github.com/tanelsokolov/k8m.git' # Update this to your repo
     targetRevision: HEAD
     path: charts/metrics-frontend-lb
   destination:
