@@ -4,7 +4,6 @@
 const config = {
     apiUrl: '/api/metrics', // API endpoint to fetch metrics
     refreshInterval: 1000, // Update every 1 second
-    webServerName: 'Development',
     colors: {
       low: '#2ecc71',    // Green
       medium: '#f39c12', // Orange
@@ -127,8 +126,8 @@ const config = {
     
     // Update web server info
     webServer: function(element, server) {
-      // Use the frontend server name from config, not backend data
-      element.querySelector('.web-server').textContent = config.webServerName;
+      // Use the hostname from the backend data, which should be the pod name
+      element.querySelector('.web-server').textContent = server.hostname;
     }
   };
 
