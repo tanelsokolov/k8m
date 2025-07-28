@@ -26,7 +26,7 @@ spec:
     path: charts/metrics-frontend
     helm:
       valueFiles:
-        - values-prod.yaml
+        - values.yaml
   destination:
     server: https://kubernetes.default.svc
     namespace: monitoring
