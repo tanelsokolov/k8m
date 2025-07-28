@@ -1,5 +1,5 @@
 // Dashboard.js - Server Metrics Dashboard
-//deployment test
+//deployment
 // Configuration
 const config = {
     apiUrl: '/api/metrics', // API endpoint to fetch metrics
