@@ -2,7 +2,7 @@
 replicaCount: 2
 
 image:
-  repository:
+  repository: tanelsokolov/metrics-frontend
   pullPolicy: IfNotPresent
   tag: "latest"
 
