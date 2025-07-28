@@ -4,5 +4,5 @@ helm:
     value: tanelsokolov/metrics-frontend
     forcestring: true
   - name: image.tag
-    value: latest
+    value: tanelsokolov/metrics-frontend:20250728-121256
     forcestring: true
