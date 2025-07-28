@@ -22,45 +22,14 @@ jobs:
           username: ${{ secrets.DOCKER_USERNAME }}
           password: ${{ secrets.DOCKER_PASSWORD }}
 
-      - name: Generate timestamp
-        id: timestamp
-        run: echo "timestamp=$(date +%Y%m%d-%H%M%S)" >> $GITHUB_OUTPUT
-
       - name: Build and push images
-        env:
-          TIMESTAMP: ${{ steps.timestamp.outputs.timestamp }}
         run: |
           # Backend
-          docker build -t tanelsokolov/metrics-backend:latest -t tanelsokolov/metrics-backend:${TIMESTAMP} ./backend
+          docker build -t tanelsokolov/metrics-backend:latest ./backend
           docker push tanelsokolov/metrics-backend:latest
-          docker push tanelsokolov/metrics-backend:${TIMESTAMP}
-          
           # Frontend
-          docker build -t tanelsokolov/metrics-frontend:latest -t tanelsokolov/metrics-frontend:${TIMESTAMP} ./frontend
+          docker build -t tanelsokolov/metrics-frontend:latest ./frontend
           docker push tanelsokolov/metrics-frontend:latest
-          docker push tanelsokolov/metrics-frontend:${TIMESTAMP}
-
-      - name: Update ArgoCD image tag for metrics-backend
-        run: |
-          sed -i "s/^\( *value: *\).*/\1${TIMESTAMP}/" charts/metrics-backend/.argocd-source-metrics-backend.yaml
-          git config user.name "github-actions[bot]"
-          git config user.email "github-actions[bot]@users.noreply.github.com"
-          git add charts/metrics-backend/.argocd-source-metrics-backend.yaml
-          git commit -m "chore: update metrics-backend image tag to ${TIMESTAMP}" || echo "No changes to commit"
-          git push
-        env:
-          TIMESTAMP: ${{ steps.timestamp.outputs.timestamp }}
-
-      - name: Update ArgoCD image tag for metrics-frontend
-        run: |
-          sed -i "s/^\( *value: *\).*/\1${TIMESTAMP}/" charts/metrics-frontend/.argocd-source-metrics-frontend.yaml
-          git config user.name "github-actions[bot]"
-          git config user.email "github-actions[bot]@users.noreply.github.com"
-          git add charts/metrics-frontend/.argocd-source-metrics-frontend.yaml
-          git commit -m "chore: update metrics-frontend image tag to ${TIMESTAMP}" || echo "No changes to commit"
-          git push
-        env:
-          TIMESTAMP: ${{ steps.timestamp.outputs.timestamp }}
 
   build-semantic:
     runs-on: ubuntu-latest
