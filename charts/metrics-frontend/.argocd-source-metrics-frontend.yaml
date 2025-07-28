@@ -1,0 +1,5 @@
+helm:
+  parameters:
+  - name: image.tag
+    value: tanelsokolov/metrics-frontend:20250728-113549
+    forcestring: true
