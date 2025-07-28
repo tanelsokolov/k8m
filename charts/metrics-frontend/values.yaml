@@ -30,7 +30,7 @@ service:
   targetPort: 5173
 
 ingress:
-  enabled: false
+  enabled: true
   monitoring:
     enabled: false
   className: "nginx"
