@@ -4,18 +4,16 @@ metadata:
   name: metrics-frontend
   namespace: argocd
   annotations:
-    # Image Updater konfiguratsiooni annotaatsioonid
-    argocd-image-updater.argoproj.io/image-list: frontend=tanelsokolov/metrics-frontend
+    # Lihtsustatud konfiguratsioon - jälgib ainult 'latest' tag'i
+    argocd-image-updater.argoproj.io/image-list: frontend=tanelsokolov/metrics-frontend:latest
     argocd-image-updater.argoproj.io/frontend.helm.image-spec: image.tag
     argocd-image-updater.argoproj.io/write-back-method: git
     argocd-image-updater.argoproj.io/git-branch: main
     
-    # Prod timestamp-based versioning
+    # Jälgib latest tag'i muudatusi
     argocd-image-updater.argoproj.io/frontend.update-strategy: latest
-    argocd-image-updater.argoproj.io/frontend.allow-tags: regexp:^prod-[0-9]{8}-[0-9]{6}$
-    argocd-image-updater.argoproj.io/frontend.ignore-tags: latest,dev-latest,dev-.*
     
-    # Git commit seaded
+    # Git commit seaded  
     argocd-image-updater.argoproj.io/git-commit-user: argocd-image-updater
     argocd-image-updater.argoproj.io/git-commit-email: argocd-image-updater@tanelsokolov.dev
     argocd-image-updater.argoproj.io/git-commit-message: "chore: update {{.AppName}} frontend image to {{.NewTag}}"
