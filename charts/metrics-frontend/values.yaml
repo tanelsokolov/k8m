@@ -75,7 +75,7 @@ frontend:
   serviceName: "metrics-frontend"
   servicePort: 5173
   # For dev: use external IP, for prod: use internal service
-  externalUrl: "http://192.168.189.101"
+  externalUrl: "http://metrics-backend.monitoring.svc.cluster.local:3000"
   useInternalService: false
 
 # ConfigMap data for frontend configuration

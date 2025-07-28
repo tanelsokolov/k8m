@@ -40,6 +40,28 @@ jobs:
           docker push tanelsokolov/metrics-frontend:latest
           docker push tanelsokolov/metrics-frontend:${TIMESTAMP}
 
+      - name: Update ArgoCD image tag for metrics-backend
+        run: |
+          sed -i "s/^\( *value: *\).*/\1${TIMESTAMP}/" charts/metrics-backend/.argocd-source-metrics-backend.yaml
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add charts/metrics-backend/.argocd-source-metrics-backend.yaml
+          git commit -m "chore: update metrics-backend image tag to ${TIMESTAMP}" || echo "No changes to commit"
+          git push
+        env:
+          TIMESTAMP: ${{ steps.timestamp.outputs.timestamp }}
+
+      - name: Update ArgoCD image tag for metrics-frontend
+        run: |
+          sed -i "s/^\( *value: *\).*/\1${TIMESTAMP}/" charts/metrics-frontend/.argocd-source-metrics-frontend.yaml
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add charts/metrics-frontend/.argocd-source-metrics-frontend.yaml
+          git commit -m "chore: update metrics-frontend image tag to ${TIMESTAMP}" || echo "No changes to commit"
+          git push
+        env:
+          TIMESTAMP: ${{ steps.timestamp.outputs.timestamp }}
+
   build-semantic:
     runs-on: ubuntu-latest
     if: startsWith(github.ref, 'refs/tags/v')
