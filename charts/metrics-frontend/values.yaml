@@ -68,7 +68,7 @@ affinity: {}
 env:
   PORT: "5173"
   NODE_ENV: "production"
-  BACKEND_URL: "http://metrics-backend.monitoring.svc.cluster.local:3000"
+  BACKEND_URL: "http://metrics-backend.monitoring.svc.cluster.local:3000" 
 
 # frontend service configuration
 frontend:
