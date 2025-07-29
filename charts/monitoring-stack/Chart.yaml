@@ -1,0 +1,18 @@
+apiVersion: v2
+name: monitoring-stack
+description: Prometheus and Grafana monitoring stack for Kubernetes
+type: application
+version: 0.1.0
+appVersion: "1.0"
+keywords:
+  - monitoring
+  - prometheus
+  - grafana
+  - observability
+home: https://github.com/tanelsokolov/k8m
+sources:
+  - https://prometheus.io/
+  - https://grafana.com/
+maintainers:
+  - name: Tanel Sokolov
+    email: tanel.sokolov@gmail.com

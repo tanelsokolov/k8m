@@ -1,0 +1,22 @@
+{{- if .Values.prometheus.enabled }}
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "monitoring-stack.prometheus.fullname" . }}
+  namespace: {{ .Values.namespace.name }}
+  labels:
+    {{- include "monitoring-stack.prometheus.labels" . | nindent 4 }}
+  {{- with .Values.prometheus.service.annotations }}
+  annotations:
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
+spec:
+  type: {{ .Values.prometheus.service.type }}
+  ports:
+    - port: {{ .Values.prometheus.service.port }}
+      targetPort: {{ .Values.prometheus.service.targetPort }}
+      protocol: TCP
+      name: web
+  selector:
+    {{- include "monitoring-stack.prometheus.selectorLabels" . | nindent 4 }}
+{{- end }}

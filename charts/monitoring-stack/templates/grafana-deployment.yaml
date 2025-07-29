@@ -1,0 +1,48 @@
+{{- if .Values.grafana.enabled }}
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "monitoring-stack.grafana.fullname" . }}
+  namespace: {{ .Values.namespace.name }}
+  labels:
+    {{- include "monitoring-stack.grafana.labels" . | nindent 4 }}
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      {{- include "monitoring-stack.grafana.selectorLabels" . | nindent 6 }}
+  template:
+    metadata:
+      labels:
+        {{- include "monitoring-stack.grafana.selectorLabels" . | nindent 8 }}
+    spec:
+      containers:
+      - name: grafana
+        image: "{{ .Values.grafana.image.repository }}:{{ .Values.grafana.image.tag }}"
+        imagePullPolicy: {{ .Values.grafana.image.pullPolicy }}
+        ports:
+        - name: grafana
+          containerPort: {{ .Values.grafana.service.targetPort }}
+          protocol: TCP
+        env:
+        - name: GF_SECURITY_ADMIN_USER
+          value: {{ .Values.grafana.adminUser | quote }}
+        - name: GF_SECURITY_ADMIN_PASSWORD
+          value: {{ .Values.grafana.adminPassword | quote }}
+        - name: GF_USERS_ALLOW_SIGN_UP
+          value: {{ .Values.grafana.security.allowSignUp | quote }}
+        resources:
+          {{- toYaml .Values.grafana.resources | nindent 10 }}
+        volumeMounts:
+          - mountPath: /var/lib/grafana
+            name: grafana-storage
+          - mountPath: /etc/grafana/provisioning/datasources
+            name: grafana-datasources
+            readOnly: false
+      volumes:
+        - name: grafana-storage
+          emptyDir: {}
+        - name: grafana-datasources
+          configMap:
+              name: {{ include "monitoring-stack.grafana.fullname" . }}-datasources
+{{- end }}

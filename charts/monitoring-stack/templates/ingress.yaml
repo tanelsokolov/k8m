@@ -1,0 +1,65 @@
+{{- if and .Values.ingress.enabled (or .Values.ingress.grafana.enabled .Values.ingress.prometheus.enabled) }}
+{{- if .Values.ingress.grafana.enabled }}
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: {{ include "monitoring-stack.grafana.fullname" . }}-ingress
+  namespace: {{ .Values.namespace.name }}
+  labels:
+    {{- include "monitoring-stack.grafana.labels" . | nindent 4 }}
+  annotations:
+    {{- if .Values.ingress.className }}
+    kubernetes.io/ingress.class: {{ .Values.ingress.className }}
+    {{- end }}
+    {{- with .Values.ingress.annotations }}
+    {{- toYaml . | nindent 4 }}
+    {{- end }}
+spec:
+  {{- if .Values.ingress.className }}
+  ingressClassName: {{ .Values.ingress.className }}
+  {{- end }}
+  rules:
+  - host: {{ .Values.ingress.grafana.host }}
+    http:
+      paths:
+      - path: {{ .Values.ingress.grafana.path }}
+        pathType: {{ .Values.ingress.grafana.pathType }}
+        backend:
+          service:
+            name: {{ include "monitoring-stack.grafana.fullname" . }}
+            port:
+              number: {{ .Values.grafana.service.port }}
+{{- end }}
+---
+{{- if .Values.ingress.prometheus.enabled }}
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: {{ include "monitoring-stack.prometheus.fullname" . }}-ingress
+  namespace: {{ .Values.namespace.name }}
+  labels:
+    {{- include "monitoring-stack.prometheus.labels" . | nindent 4 }}
+  annotations:
+    {{- if .Values.ingress.className }}
+    kubernetes.io/ingress.class: {{ .Values.ingress.className }}
+    {{- end }}
+    {{- with .Values.ingress.annotations }}
+    {{- toYaml . | nindent 4 }}
+    {{- end }}
+spec:
+  {{- if .Values.ingress.className }}
+  ingressClassName: {{ .Values.ingress.className }}
+  {{- end }}
+  rules:
+  - host: {{ .Values.ingress.prometheus.host }}
+    http:
+      paths:
+      - path: {{ .Values.ingress.prometheus.path }}
+        pathType: {{ .Values.ingress.prometheus.pathType }}
+        backend:
+          service:
+            name: {{ include "monitoring-stack.prometheus.fullname" . }}
+            port:
+              number: {{ .Values.prometheus.service.port }}
+{{- end }}
+{{- end }}

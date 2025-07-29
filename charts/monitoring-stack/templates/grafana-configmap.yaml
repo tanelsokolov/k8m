@@ -1,0 +1,26 @@
+{{- if .Values.grafana.enabled }}
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ include "monitoring-stack.grafana.fullname" . }}-datasources
+  namespace: {{ .Values.namespace.name }}
+  labels:
+    {{- include "monitoring-stack.grafana.labels" . | nindent 4 }}
+data:
+  prometheus.yaml: |-
+    {
+        "apiVersion": 1,
+        "datasources": [
+            {
+               "access": "{{ .Values.grafana.datasources.prometheus.access }}",
+                "editable": true,
+                "name": "{{ .Values.grafana.datasources.prometheus.name }}",
+                "orgId": 1,
+                "type": "{{ .Values.grafana.datasources.prometheus.type }}",
+                "url": "{{ tpl .Values.grafana.datasources.prometheus.url . }}",
+                "version": 1,
+                "isDefault": {{ .Values.grafana.datasources.prometheus.isDefault }}
+            }
+        ]
+    }
+{{- end }}
