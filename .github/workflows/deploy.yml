@@ -42,27 +42,40 @@ jobs:
           docker push tanelsokolov/metrics-frontend:latest
           docker push tanelsokolov/metrics-frontend:${TIMESTAMP_TAG}
 
-      - name: Update ArgoCD source file
+      - name: Update ArgoCD source files
         env:
           TIMESTAMP_TAG: ${{ steps.timestamp.outputs.tag }}
         run: |
-          # Update the ArgoCD source file with new timestamp tag
-          cat > .argocd-source-metrics-frontend.yaml << EOF
+          # Update the ArgoCD source file for frontend with new timestamp tag
+          cat > charts/metrics-frontend/.argocd-source-metrics-frontend.yaml << EOF
           helm:
             parameters:
             - name: image.tag
               value: ${TIMESTAMP_TAG}
               forcestring: true
           EOF
+          
+          # Update the ArgoCD source file for backend with new timestamp tag
+          cat > charts/metrics-backend/.argocd-source-metrics-backend.yaml << EOF
+          helm:
+            parameters:
+            - name: image.name
+              value: tanelsokolov/metrics-backend
+              forcestring: true
+            - name: image.tag
+              value: ${TIMESTAMP_TAG}
+              forcestring: true
+          EOF
 
-      - name: Commit and push ArgoCD update
+      - name: Commit and push ArgoCD updates
         env:
           TIMESTAMP_TAG: ${{ steps.timestamp.outputs.tag }}
         run: |
           git config --local user.email "action@github.com"
           git config --local user.name "GitHub Action"
-          git add .argocd-source-metrics-frontend.yaml
-          git commit -m "Update ArgoCD image tag to ${TIMESTAMP_TAG}" || exit 0
+          git add charts/metrics-frontend/.argocd-source-metrics-frontend.yaml
+          git add charts/metrics-backend/.argocd-source-metrics-backend.yaml
+          git commit -m "Update ArgoCD image tags to ${TIMESTAMP_TAG}" || exit 0
           git push
 
   build-semantic:
@@ -95,25 +108,38 @@ jobs:
           docker build -t tanelsokolov/metrics-frontend:${VERSION} ./frontend
           docker push tanelsokolov/metrics-frontend:${VERSION}
 
-      - name: Update ArgoCD source file for semantic version
+      - name: Update ArgoCD source files for semantic version
         env:
           VERSION: ${{ steps.version.outputs.version }}
         run: |
-          # Update the ArgoCD source file with semantic version
-          cat > .argocd-source-metrics-frontend.yaml << EOF
+          # Update the ArgoCD source file for frontend with semantic version
+          cat > charts/metrics-frontend/.argocd-source-metrics-frontend.yaml << EOF
           helm:
             parameters:
             - name: image.tag
               value: ${VERSION}
               forcestring: true
           EOF
+          
+          # Update the ArgoCD source file for backend with semantic version
+          cat > charts/metrics-backend/.argocd-source-metrics-backend.yaml << EOF
+          helm:
+            parameters:
+            - name: image.name
+              value: tanelsokolov/metrics-backend
+              forcestring: true
+            - name: image.tag
+              value: ${VERSION}
+              forcestring: true
+          EOF
 
-      - name: Commit and push ArgoCD update for semantic version
+      - name: Commit and push ArgoCD updates for semantic version
         env:
           VERSION: ${{ steps.version.outputs.version }}
         run: |
           git config --local user.email "action@github.com"
           git config --local user.name "GitHub Action"
-          git add .argocd-source-metrics-frontend.yaml
-          git commit -m "Update ArgoCD image tag to ${VERSION}" || exit 0
+          git add charts/metrics-frontend/.argocd-source-metrics-frontend.yaml
+          git add charts/metrics-backend/.argocd-source-metrics-backend.yaml
+          git commit -m "Update ArgoCD image tags to ${VERSION}" || exit 0
           git push
