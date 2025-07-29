@@ -225,6 +225,12 @@ prometheus:
         metrics_path: /metrics
         scrape_interval: 30s
 
+      - job_name: 'elasticsearch'
+        static_configs:
+          - targets: ['elasticsearch.monitoring.svc.cluster.local:9200']
+        metrics_path: /_cluster/health
+        scrape_interval: 30s
+
   # Storage configuration
   storage:
     retention: 200h
