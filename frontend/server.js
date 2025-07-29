@@ -11,6 +11,9 @@ const __dirname = path.dirname(__filename);
 const app = express();
 const PORT = process.env.PORT || 5173;
 
+// Trust proxy for correct IP addresses
+app.set('trust proxy', true);
+
 // Proxy /api/metrics to backend metrics endpoint
 app.get('/api/metrics', async (req, res) => {
   try {
@@ -26,8 +29,14 @@ app.get('/api/metrics', async (req, res) => {
 // Serve static files
 app.use(express.static(__dirname));
 
-// Serve index.html
+// Logimine
 app.get('/', (req, res) => {
+  const timestamp = new Date().toISOString();
+  const ip = req.ip || req.connection.remoteAddress || req.socket.remoteAddress || 'Unknown';
+  const userAgent = req.get('User-Agent') || 'Unknown';
+  
+  console.log(`[${timestamp}] New client connected - IP: ${ip} - User-Agent: ${userAgent}`);
+  
   res.sendFile(path.join(__dirname, 'index.html'));
 });
 
