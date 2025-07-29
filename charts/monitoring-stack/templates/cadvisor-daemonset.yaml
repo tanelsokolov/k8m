@@ -18,22 +18,24 @@ spec:
         {{- include "monitoring-stack.selectorLabels" . | nindent 8 }}
         component: cadvisor
     spec:
-      serviceAccountName: {{ include "monitoring-stack.serviceAccountName" . }}
       hostNetwork: true
       hostPID: true
+      automountServiceAccountToken: false
       containers:
       - name: cadvisor
         image: "{{ .Values.cAdvisor.image.repository }}:{{ .Values.cAdvisor.image.tag }}"
         imagePullPolicy: {{ .Values.cAdvisor.image.pullPolicy }}
         resources:
           {{- toYaml .Values.cAdvisor.resources | nindent 10 }}
+        securityContext:
+          privileged: true
         volumeMounts:
         - name: rootfs
           mountPath: /rootfs
           readOnly: true
         - name: var-run
           mountPath: /var/run
-          readOnly: true
+          readOnly: false
         - name: sys
           mountPath: /sys
           readOnly: true
@@ -42,6 +44,9 @@ spec:
           readOnly: true
         - name: disk
           mountPath: /dev/disk
+          readOnly: true
+        - name: proc
+          mountPath: /host/proc
           readOnly: true
         ports:
         - name: http
@@ -53,7 +58,8 @@ spec:
           - --event_storage_event_limit=default=0
           - --event_storage_age_limit=default=0
           - --disable_metrics=percpu,sched,tcp,udp,disk,diskIO,accelerator,hugetlb,referenced_memory,cpu_topology,resctrl
-          - --docker_only
+          - --store_container_labels=false
+          - --whitelisted_container_labels=io.kubernetes.container.name,io.kubernetes.pod.name,io.kubernetes.pod.namespace
       tolerations:
       - key: node-role.kubernetes.io/master
         effect: NoSchedule
@@ -75,4 +81,7 @@ spec:
       - name: disk
         hostPath:
           path: /dev/disk
+      - name: proc
+        hostPath:
+          path: /proc
 {{- end }}
