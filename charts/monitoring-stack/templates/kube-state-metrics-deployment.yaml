@@ -1,0 +1,51 @@
+{{- if .Values.kubeStateMetrics.enabled }}
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "monitoring-stack.fullname" . }}-kube-state-metrics
+  namespace: {{ .Values.namespace.name }}
+  labels:
+    {{- include "monitoring-stack.labels" . | nindent 4 }}
+    component: kube-state-metrics
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      {{- include "monitoring-stack.selectorLabels" . | nindent 6 }}
+      component: kube-state-metrics
+  template:
+    metadata:
+      labels:
+        {{- include "monitoring-stack.selectorLabels" . | nindent 8 }}
+        component: kube-state-metrics
+      annotations:
+        prometheus.io/scrape: "true"
+        prometheus.io/port: "{{ .Values.kubeStateMetrics.service.targetPort }}"
+    spec:
+      serviceAccountName: {{ include "monitoring-stack.serviceAccountName" . }}
+      containers:
+      - name: kube-state-metrics
+        image: "{{ .Values.kubeStateMetrics.image.repository }}:{{ .Values.kubeStateMetrics.image.tag }}"
+        imagePullPolicy: {{ .Values.kubeStateMetrics.image.pullPolicy }}
+        args:
+          - '--port=8080'
+          - '--telemetry-port=8081'
+        ports:
+        - name: http
+          containerPort: {{ .Values.kubeStateMetrics.service.targetPort }}
+          protocol: TCP
+        resources:
+          {{- toYaml .Values.kubeStateMetrics.resources | nindent 10 }}
+        livenessProbe:
+          httpGet:
+            path: /healthz
+            port: 8080
+          initialDelaySeconds: 5
+          timeoutSeconds: 5
+        readinessProbe:
+          httpGet:
+            path: /
+            port: 8080
+          initialDelaySeconds: 5
+          timeoutSeconds: 5
+{{- end }} 

@@ -1,0 +1,70 @@
+{{- if .Values.nodeExporter.enabled }}
+apiVersion: apps/v1
+kind: DaemonSet
+metadata:
+  name: {{ include "monitoring-stack.fullname" . }}-node-exporter
+  namespace: {{ .Values.namespace.name }}
+  labels:
+    {{- include "monitoring-stack.labels" . | nindent 4 }}
+    component: node-exporter
+spec:
+  selector:
+    matchLabels:
+      {{- include "monitoring-stack.selectorLabels" . | nindent 6 }}
+      component: node-exporter
+  template:
+    metadata:
+      labels:
+        {{- include "monitoring-stack.selectorLabels" . | nindent 8 }}
+        component: node-exporter
+      annotations:
+        prometheus.io/scrape: "true"
+        prometheus.io/port: "{{ .Values.nodeExporter.service.targetPort }}"
+    spec:
+      serviceAccountName: {{ include "monitoring-stack.serviceAccountName" . }}
+      containers:
+      - name: node-exporter
+        image: "{{ .Values.nodeExporter.image.repository }}:{{ .Values.nodeExporter.image.tag }}"
+        imagePullPolicy: {{ .Values.nodeExporter.image.pullPolicy }}
+        args:
+          - '--path.procfs=/host/proc'
+          - '--path.sysfs=/host/sys'
+          - '--path.rootfs=/host/root'
+          - '--web.listen-address=:{{ .Values.nodeExporter.service.targetPort }}'
+          - '--web.telemetry-path=/metrics'
+        ports:
+        - name: http
+          containerPort: {{ .Values.nodeExporter.service.targetPort }}
+          protocol: TCP
+        resources:
+          {{- toYaml .Values.nodeExporter.resources | nindent 10 }}
+        volumeMounts:
+        - name: proc
+          mountPath: /host/proc
+          readOnly: true
+        - name: sys
+          mountPath: /host/sys
+          readOnly: true
+        - name: root
+          mountPath: /host/root
+          readOnly: true
+        securityContext:
+          runAsNonRoot: true
+          runAsUser: 65534
+      volumes:
+      - name: proc
+        hostPath:
+          path: /proc
+      - name: sys
+        hostPath:
+          path: /sys
+      - name: root
+        hostPath:
+          path: /
+      hostNetwork: true
+      hostPID: true
+      tolerations:
+      - key: node-role.kubernetes.io/master
+        operator: Exists
+        effect: NoSchedule
+{{- end }} 

@@ -1,0 +1,24 @@
+{{- if .Values.nodeExporter.enabled }}
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "monitoring-stack.fullname" . }}-node-exporter
+  namespace: {{ .Values.namespace.name }}
+  labels:
+    {{- include "monitoring-stack.labels" . | nindent 4 }}
+    component: node-exporter
+  {{- with .Values.nodeExporter.service.annotations }}
+  annotations:
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
+spec:
+  type: {{ .Values.nodeExporter.service.type }}
+  ports:
+    - port: {{ .Values.nodeExporter.service.port }}
+      targetPort: {{ .Values.nodeExporter.service.targetPort }}
+      protocol: TCP
+      name: http
+  selector:
+    {{- include "monitoring-stack.selectorLabels" . | nindent 4 }}
+    component: node-exporter
+{{- end }} 

@@ -95,6 +95,127 @@ prometheus:
         - source_labels: [__meta_kubernetes_pod_name]
           action: replace
           target_label: kubernetes_pod_name
+      
+      - job_name: 'kubernetes-services'
+        kubernetes_sd_configs:
+        - role: service
+        metrics_path: /metrics
+        relabel_configs:
+        - source_labels: [__meta_kubernetes_service_annotation_prometheus_io_scrape]
+          action: keep
+          regex: true
+        - source_labels: [__meta_kubernetes_service_annotation_prometheus_io_path]
+          action: replace
+          target_label: __metrics_path__
+          regex: (.+)
+        - source_labels: [__address__, __meta_kubernetes_service_annotation_prometheus_io_port]
+          action: replace
+          regex: ([^:]+)(?::\d+)?;(\d+)
+          replacement: $1:$2
+          target_label: __address__
+        - action: labelmap
+          regex: __meta_kubernetes_service_label_(.+)
+        - source_labels: [__meta_kubernetes_namespace]
+          action: replace
+          target_label: kubernetes_namespace
+        - source_labels: [__meta_kubernetes_service_name]
+          action: replace
+          target_label: kubernetes_service_name
+      
+      - job_name: 'kubernetes-endpoints'
+        kubernetes_sd_configs:
+        - role: endpoints
+        relabel_configs:
+        - source_labels: [__meta_kubernetes_service_annotation_prometheus_io_scrape]
+          action: keep
+          regex: true
+        - source_labels: [__meta_kubernetes_service_annotation_prometheus_io_path]
+          action: replace
+          target_label: __metrics_path__
+          regex: (.+)
+        - source_labels: [__address__, __meta_kubernetes_service_annotation_prometheus_io_port]
+          action: replace
+          regex: ([^:]+)(?::\d+)?;(\d+)
+          replacement: $1:$2
+          target_label: __address__
+        - action: labelmap
+          regex: __meta_kubernetes_service_label_(.+)
+        - source_labels: [__meta_kubernetes_namespace]
+          action: replace
+          target_label: kubernetes_namespace
+        - source_labels: [__meta_kubernetes_service_name]
+          action: replace
+          target_label: kubernetes_service_name
+      
+      - job_name: 'kubernetes-ingress'
+        kubernetes_sd_configs:
+        - role: ingress
+        relabel_configs:
+        - source_labels: [__meta_kubernetes_ingress_annotation_prometheus_io_scrape]
+          action: keep
+          regex: true
+        - source_labels: [__meta_kubernetes_ingress_annotation_prometheus_io_path]
+          action: replace
+          target_label: __metrics_path__
+          regex: (.+)
+        - source_labels: [__address__, __meta_kubernetes_ingress_annotation_prometheus_io_port]
+          action: replace
+          regex: ([^:]+)(?::\d+)?;(\d+)
+          replacement: $1:$2
+          target_label: __address__
+        - action: labelmap
+          regex: __meta_kubernetes_ingress_label_(.+)
+        - source_labels: [__meta_kubernetes_namespace]
+          action: replace
+          target_label: kubernetes_namespace
+        - source_labels: [__meta_kubernetes_ingress_name]
+          action: replace
+          target_label: kubernetes_ingress_name
+      
+      - job_name: 'kube-state-metrics'
+        static_configs:
+          - targets: ['kube-state-metrics.kube-system.svc.cluster.local:8080']
+      
+      - job_name: 'node-exporter'
+        static_configs:
+          - targets: ['node-exporter.kube-system.svc.cluster.local:9100']
+      
+      - job_name: 'cadvisor'
+        static_configs:
+          - targets: ['cadvisor.kube-system.svc.cluster.local:8080']
+      
+      - job_name: 'metrics-backend'
+        static_configs:
+          - targets: ['metrics-backend.monitoring.svc.cluster.local:3000']
+        metrics_path: /metrics/prometheus
+        scrape_interval: 15s
+      
+      - job_name: 'metrics-frontend'
+        static_configs:
+          - targets: ['metrics-frontend.monitoring.svc.cluster.local:5173']
+        metrics_path: /metrics
+        scrape_interval: 15s
+      
+      - job_name: 'argocd-server'
+        static_configs:
+          - targets: ['argocd-server.argocd.svc.cluster.local:443']
+        scheme: https
+        tls_config:
+          insecure_skip_verify: true
+        metrics_path: /metrics
+        scrape_interval: 30s
+      
+      - job_name: 'argocd-repo-server'
+        static_configs:
+          - targets: ['argocd-repo-server.argocd.svc.cluster.local:8081']
+        metrics_path: /metrics
+        scrape_interval: 30s
+      
+      - job_name: 'argocd-application-controller'
+        static_configs:
+          - targets: ['argocd-application-controller.argocd.svc.cluster.local:8082']
+        metrics_path: /metrics
+        scrape_interval: 30s
 
   # Storage configuration
   storage:
@@ -169,3 +290,114 @@ serviceAccount:
 # RBAC
 rbac:
   create: true
+
+# Additional monitoring components
+kubeStateMetrics:
+  enabled: true
+  image:
+    repository: registry.k8s.io/kube-state-metrics/kube-state-metrics
+    tag: v2.9.2
+    pullPolicy: IfNotPresent
+  
+  service:
+    type: ClusterIP
+    port: 8080
+    targetPort: 8080
+    annotations:
+      prometheus.io/scrape: 'true'
+      prometheus.io/port: '8080'
+  
+  resources:
+    requests:
+      cpu: 100m
+      memory: 128Mi
+    limits:
+      cpu: 200m
+      memory: 256Mi
+
+nodeExporter:
+  enabled: true
+  image:
+    repository: prom/node-exporter
+    tag: v1.6.1
+    pullPolicy: IfNotPresent
+  
+  service:
+    type: ClusterIP
+    port: 9100
+    targetPort: 9100
+    annotations:
+      prometheus.io/scrape: 'true'
+      prometheus.io/port: '9100'
+  
+  resources:
+    requests:
+      cpu: 100m
+      memory: 64Mi
+    limits:
+      cpu: 200m
+      memory: 128Mi
+
+cAdvisor:
+  enabled: true
+  image:
+    repository: gcr.io/cadvisor/cadvisor
+    tag: v0.47.2
+    pullPolicy: IfNotPresent
+  
+  service:
+    type: ClusterIP
+    port: 8080
+    targetPort: 8080
+    annotations:
+      prometheus.io/scrape: 'true'
+      prometheus.io/port: '8080'
+  
+  resources:
+    requests:
+      cpu: 100m
+      memory: 128Mi
+    limits:
+      cpu: 200m
+      memory: 256Mi
+
+# Alertmanager configuration
+alertmanager:
+  enabled: true
+  image:
+    repository: prom/alertmanager
+    tag: v0.26.0
+    pullPolicy: IfNotPresent
+  
+  service:
+    type: ClusterIP
+    port: 9093
+    targetPort: 9093
+    annotations:
+      prometheus.io/scrape: 'true'
+      prometheus.io/port: '9093'
+  
+  resources:
+    requests:
+      cpu: 100m
+      memory: 128Mi
+    limits:
+      cpu: 200m
+      memory: 256Mi
+  
+  config:
+    global:
+      smtp_smarthost: 'localhost:587'
+      smtp_from: 'alertmanager@example.com'
+    
+    route:
+      group_by: ['alertname']
+      group_wait: 10s
+      group_interval: 10s
+      repeat_interval: 1h
+      receiver: 'web.hook'
+    
+    receivers:
+      - name: 'web.hook'
+        webhook_configs:
+          - url: 'http://127.0.0.1:5001/'
