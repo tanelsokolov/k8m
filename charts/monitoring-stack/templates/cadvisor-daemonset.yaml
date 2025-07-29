@@ -1,0 +1,78 @@
+{{- if .Values.cAdvisor.enabled }}
+apiVersion: apps/v1
+kind: DaemonSet
+metadata:
+  name: {{ include "monitoring-stack.fullname" . }}-cadvisor
+  namespace: {{ .Values.namespace.name }}
+  labels:
+    {{- include "monitoring-stack.labels" . | nindent 4 }}
+    component: cadvisor
+spec:
+  selector:
+    matchLabels:
+      {{- include "monitoring-stack.selectorLabels" . | nindent 6 }}
+      component: cadvisor
+  template:
+    metadata:
+      labels:
+        {{- include "monitoring-stack.selectorLabels" . | nindent 8 }}
+        component: cadvisor
+    spec:
+      serviceAccountName: {{ include "monitoring-stack.serviceAccountName" . }}
+      hostNetwork: true
+      hostPID: true
+      containers:
+      - name: cadvisor
+        image: "{{ .Values.cAdvisor.image.repository }}:{{ .Values.cAdvisor.image.tag }}"
+        imagePullPolicy: {{ .Values.cAdvisor.image.pullPolicy }}
+        resources:
+          {{- toYaml .Values.cAdvisor.resources | nindent 10 }}
+        volumeMounts:
+        - name: rootfs
+          mountPath: /rootfs
+          readOnly: true
+        - name: var-run
+          mountPath: /var/run
+          readOnly: true
+        - name: sys
+          mountPath: /sys
+          readOnly: true
+        - name: docker
+          mountPath: /var/lib/docker
+          readOnly: true
+        - name: disk
+          mountPath: /dev/disk
+          readOnly: true
+        ports:
+        - name: http
+          containerPort: {{ .Values.cAdvisor.service.targetPort }}
+          protocol: TCP
+        args:
+          - --housekeeping_interval=10s
+          - --max_housekeeping_interval=15s
+          - --event_storage_event_limit=default=0
+          - --event_storage_age_limit=default=0
+          - --disable_metrics=percpu,sched,tcp,udp,disk,diskIO,accelerator,hugetlb,referenced_memory,cpu_topology,resctrl
+          - --docker_only
+      tolerations:
+      - key: node-role.kubernetes.io/master
+        effect: NoSchedule
+      - key: node-role.kubernetes.io/control-plane
+        effect: NoSchedule
+      volumes:
+      - name: rootfs
+        hostPath:
+          path: /
+      - name: var-run
+        hostPath:
+          path: /var/run
+      - name: sys
+        hostPath:
+          path: /sys
+      - name: docker
+        hostPath:
+          path: /var/lib/docker
+      - name: disk
+        hostPath:
+          path: /dev/disk
+{{- end }}

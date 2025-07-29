@@ -174,26 +174,20 @@ prometheus:
       
       - job_name: 'kube-state-metrics'
         static_configs:
-          - targets: ['kube-state-metrics.kube-system.svc.cluster.local:8080']
+          - targets: ['monitoring-stack-kube-state-metrics.monitoring.svc.cluster.local:8080']
       
       - job_name: 'node-exporter'
         static_configs:
-          - targets: ['node-exporter.kube-system.svc.cluster.local:9100']
+          - targets: ['monitoring-stack-node-exporter.monitoring.svc.cluster.local:9100']
       
       - job_name: 'cadvisor'
         static_configs:
-          - targets: ['cadvisor.kube-system.svc.cluster.local:8080']
+          - targets: ['monitoring-stack-cadvisor.monitoring.svc.cluster.local:8080']
       
       - job_name: 'metrics-backend'
         static_configs:
           - targets: ['metrics-backend.monitoring.svc.cluster.local:3000']
         metrics_path: /metrics/prometheus
-        scrape_interval: 15s
-      
-      - job_name: 'metrics-frontend'
-        static_configs:
-          - targets: ['metrics-frontend.monitoring.svc.cluster.local:5173']
-        metrics_path: /metrics
         scrape_interval: 15s
       
       - job_name: 'argocd-server'
