@@ -22,14 +22,48 @@ jobs:
           username: ${{ secrets.DOCKER_USERNAME }}
           password: ${{ secrets.DOCKER_PASSWORD }}
 
+      - name: Generate timestamp tag
+        id: timestamp
+        run: echo "tag=$(date +'%Y%m%d-%H%M%S')" >> $GITHUB_OUTPUT
+
       - name: Build and push images
+        env:
+          TIMESTAMP_TAG: ${{ steps.timestamp.outputs.tag }}
         run: |
           # Backend
           docker build -t tanelsokolov/metrics-backend:latest ./backend
+          docker build -t tanelsokolov/metrics-backend:${TIMESTAMP_TAG} ./backend
           docker push tanelsokolov/metrics-backend:latest
+          docker push tanelsokolov/metrics-backend:${TIMESTAMP_TAG}
+          
           # Frontend
           docker build -t tanelsokolov/metrics-frontend:latest ./frontend
+          docker build -t tanelsokolov/metrics-frontend:${TIMESTAMP_TAG} ./frontend
           docker push tanelsokolov/metrics-frontend:latest
+          docker push tanelsokolov/metrics-frontend:${TIMESTAMP_TAG}
+
+      - name: Update ArgoCD source file
+        env:
+          TIMESTAMP_TAG: ${{ steps.timestamp.outputs.tag }}
+        run: |
+          # Update the ArgoCD source file with new timestamp tag
+          cat > .argocd-source-metrics-frontend.yaml << EOF
+          helm:
+            parameters:
+            - name: image.tag
+              value: ${TIMESTAMP_TAG}
+              forcestring: true
+          EOF
+
+      - name: Commit and push ArgoCD update
+        env:
+          TIMESTAMP_TAG: ${{ steps.timestamp.outputs.tag }}
+        run: |
+          git config --local user.email "action@github.com"
+          git config --local user.name "GitHub Action"
+          git add .argocd-source-metrics-frontend.yaml
+          git commit -m "Update ArgoCD image tag to ${TIMESTAMP_TAG}" || exit 0
+          git push
 
   build-semantic:
     runs-on: ubuntu-latest
@@ -60,3 +94,26 @@ jobs:
           # Frontend
           docker build -t tanelsokolov/metrics-frontend:${VERSION} ./frontend
           docker push tanelsokolov/metrics-frontend:${VERSION}
+
+      - name: Update ArgoCD source file for semantic version
+        env:
+          VERSION: ${{ steps.version.outputs.version }}
+        run: |
+          # Update the ArgoCD source file with semantic version
+          cat > .argocd-source-metrics-frontend.yaml << EOF
+          helm:
+            parameters:
+            - name: image.tag
+              value: ${VERSION}
+              forcestring: true
+          EOF
+
+      - name: Commit and push ArgoCD update for semantic version
+        env:
+          VERSION: ${{ steps.version.outputs.version }}
+        run: |
+          git config --local user.email "action@github.com"
+          git config --local user.name "GitHub Action"
+          git add .argocd-source-metrics-frontend.yaml
+          git commit -m "Update ArgoCD image tag to ${VERSION}" || exit 0
+          git push
