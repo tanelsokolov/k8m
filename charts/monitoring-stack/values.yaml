@@ -1,4 +1,4 @@
-# Default values for monitoring-stack
+# Default values for monitoring-stack 
 nameOverride: ""
 fullnameOverride: ""
 
