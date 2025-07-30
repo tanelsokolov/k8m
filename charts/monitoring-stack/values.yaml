@@ -486,6 +486,7 @@ fluent-bit:
           Logstash_Prefix kubernetes_logs
           Time_Key        @timestamp
           Replace_Dots    On
+          Suppress_Type_Name On
 
     parsers: |
       [PARSER]
