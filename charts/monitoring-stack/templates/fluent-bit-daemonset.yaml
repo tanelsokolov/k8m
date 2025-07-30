@@ -22,6 +22,9 @@ spec:
         - name: fluent-bit
           image: "{{ (get .Values "fluent-bit").image.repository }}:{{ (get .Values "fluent-bit").image.tag }}"
           imagePullPolicy: {{ (get .Values "fluent-bit").image.pullPolicy }}
+          args:
+            - -c
+            - /fluent-bit/etc/fluent-bit.conf
           resources:
             {{- toYaml (get .Values "fluent-bit").resources | nindent 12 }}
           volumeMounts:
