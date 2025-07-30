@@ -8,10 +8,10 @@ metadata:
     app.kubernetes.io/component: fluent-bit
 data:
   fluent-bit.conf: |
-{{ .Values.fluent-bit.config.service | indent 4 }}
-{{ .Values.fluent-bit.config.inputs | indent 4 }}
-{{ .Values.fluent-bit.config.filters | indent 4 }}
-{{ .Values.fluent-bit.config.outputs | indent 4 }}
+{{ (get .Values "fluent-bit").config.service | indent 4 }}
+{{ (get .Values "fluent-bit").config.inputs | indent 4 }}
+{{ (get .Values "fluent-bit").config.filters | indent 4 }}
+{{ (get .Values "fluent-bit").config.outputs | indent 4 }}
   parsers.conf: |
-{{ .Values.fluent-bit.config.parsers | indent 4 }}
+{{ (get .Values "fluent-bit").config.parsers | indent 4 }}
 {{- end }}
