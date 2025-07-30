@@ -1,4 +1,4 @@
-{{- if .Values.kibana.enabled }}
+{{ if .Values.kibana.enabled }}
 apiVersion: v1
 kind: Service
 metadata:
@@ -16,4 +16,4 @@ spec:
   selector:
     {{- include "monitoring-stack.selectorLabels" . | nindent 4 }}
     app.kubernetes.io/component: kibana
-{{- end }}
+{{ end }}

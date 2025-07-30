@@ -1,5 +1,5 @@
-{{- if and .Values.ingress.enabled (or .Values.ingress.grafana.enabled .Values.ingress.prometheus.enabled) }}
-{{- if .Values.ingress.grafana.enabled }}
+{{ if and .Values.ingress.enabled (or .Values.ingress.grafana.enabled .Values.ingress.prometheus.enabled) }}
+{{ if .Values.ingress.grafana.enabled }}
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
@@ -29,9 +29,9 @@ spec:
             name: {{ include "monitoring-stack.grafana.fullname" . }}
             port:
               number: {{ .Values.grafana.service.port }}
-{{- end }}
+{{ end }}
 ---
-{{- if .Values.ingress.prometheus.enabled }}
+{{ if .Values.ingress.prometheus.enabled }}
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
@@ -61,7 +61,7 @@ spec:
                 name: {{ include "monitoring-stack.prometheus.fullname" . }}
                 port:
                   number: {{ .Values.prometheus.service.port }}
-  {{- if .Values.ingress.kibana.enabled }}
+  {{ if .Values.ingress.kibana.enabled }}
     - host: {{ .Values.ingress.kibana.host }}
       http:
         paths:
@@ -72,6 +72,6 @@ spec:
                 name: {{ include "monitoring-stack.fullname" . }}-kibana
                 port:
                   number: {{ .Values.kibana.service.port }}
-  {{- end }}
-{{- end }}
-{{- end }}
+  {{ end }}
+{{ end }}
+{{ end }}

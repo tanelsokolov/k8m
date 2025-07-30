@@ -1,4 +1,4 @@
-{{- if .Values.fluent-bit.enabled }}
+{{ if .Values.fluent-bit.enabled }}
 apiVersion: apps/v1
 kind: DaemonSet
 metadata:
@@ -42,4 +42,4 @@ spec:
         - name: config
           configMap:
             name: {{ include "monitoring-stack.fullname" . }}-fluent-bit
-{{- end }}
+{{ end }}
