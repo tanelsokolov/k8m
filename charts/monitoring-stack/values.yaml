@@ -285,7 +285,7 @@ ingress:
 serviceAccount:
   create: true
   annotations: {}
-  name: ""
+  name: "monitoring-stack-kube-state-metrics"
 
 # RBAC
 rbac:
