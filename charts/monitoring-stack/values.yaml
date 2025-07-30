@@ -204,19 +204,11 @@ prometheus:
         metrics_path: /metrics/prometheus
         scrape_interval: 15s
       
-      - job_name: 'argocd-server'
-        static_configs:
-          - targets: ['argocd-server.argocd.svc.cluster.local:443']
-        scheme: https
-        tls_config:
-          insecure_skip_verify: true
-        metrics_path: /metrics
-        scrape_interval: 30s
 
       - job_name: 'elasticsearch'
         static_configs:
-          - targets: ['elasticsearch.monitoring.svc.cluster.local:9200']
-        metrics_path: /_cluster/health
+          - targets: ['elasticsearch.monitoring.svc.cluster.local:9114']
+        metrics_path: /metrics
         scrape_interval: 30s
 
   # Storage configuration
