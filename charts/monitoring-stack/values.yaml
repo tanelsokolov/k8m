@@ -423,7 +423,7 @@ kibana:
       memory: 1Gi
   
   config:
-    server.host: "0"
+    server.host: "0.0.0.0"
     elasticsearch.hosts: '["http://elasticsearch.monitoring.svc.cluster.local:9200"]'
 
 # Fluent-bit configuration
