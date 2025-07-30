@@ -1,4 +1,4 @@
-{{ if .Values.fluent-bit.enabled }}
+{{- if .Values.fluent-bit.enabled }}
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRoleBinding
 metadata:
@@ -14,4 +14,4 @@ subjects:
   - kind: ServiceAccount
     name: {{ include "monitoring-stack.fullname" . }}-fluent-bit
     namespace: {{ .Release.Namespace }}
-{{ end }}
+{{- end }}
