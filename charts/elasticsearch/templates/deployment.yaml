@@ -44,7 +44,7 @@ spec:
           resources:
             {{- toYaml .Values.resources | nindent 12 }}
         - name: elasticsearch-exporter
-          image: prom/prometheus-elasticsearch-exporter:v1.5.0
+          image: prometheuscommunity/elasticsearch-exporter
           args:
             - "--es.uri=http://localhost:9200"
             - "--es.all"
