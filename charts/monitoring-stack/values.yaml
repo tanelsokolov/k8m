@@ -484,7 +484,6 @@ fluent-bit:
           Port            9200
           Logstash_Format On
           Logstash_Prefix kubernetes_logs
-          Type            flb_type
           Time_Key        @timestamp
           Replace_Dots    On
 
