@@ -482,7 +482,7 @@ fluent-bit:
           Match           *
           Host            elasticsearch.monitoring.svc.cluster.local
           Port            9200
-          Logstash_Format On
+          Logstash_Format Off
           Logstash_Prefix kubernetes_logs
           Time_Key        @timestamp
           Replace_Dots    On
