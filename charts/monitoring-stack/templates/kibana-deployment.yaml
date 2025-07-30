@@ -1,0 +1,38 @@
+{{- if .Values.kibana.enabled }}
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "monitoring-stack.fullname" . }}-kibana
+  labels:
+    {{- include "monitoring-stack.labels" . | nindent 4 }}
+    app.kubernetes.io/component: kibana
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      {{- include "monitoring-stack.selectorLabels" . | nindent 6 }}
+      app.kubernetes.io/component: kibana
+  template:
+    metadata:
+      labels:
+        {{- include "monitoring-stack.selectorLabels" . | nindent 8 }}
+        app.kubernetes.io/component: kibana
+    spec:
+      containers:
+        - name: kibana
+          image: "{{ .Values.kibana.image.repository }}:{{ .Values.kibana.image.tag }}"
+          imagePullPolicy: {{ .Values.kibana.image.pullPolicy }}
+          ports:
+            - containerPort: {{ .Values.kibana.service.port }}
+              name: http
+          resources:
+            {{- toYaml .Values.kibana.resources | nindent 12 }}
+          volumeMounts:
+            - name: config
+              mountPath: /usr/share/kibana/config/kibana.yml
+              subPath: kibana.yml
+      volumes:
+        - name: config
+          configMap:
+            name: {{ include "monitoring-stack.fullname" . }}-kibana
+{{- end }}

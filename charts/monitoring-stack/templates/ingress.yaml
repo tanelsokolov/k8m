@@ -51,15 +51,27 @@ spec:
   ingressClassName: {{ .Values.ingress.className }}
   {{- end }}
   rules:
-  - host: {{ .Values.ingress.prometheus.host }}
-    http:
-      paths:
-      - path: {{ .Values.ingress.prometheus.path }}
-        pathType: {{ .Values.ingress.prometheus.pathType }}
-        backend:
-          service:
-            name: {{ include "monitoring-stack.prometheus.fullname" . }}
-            port:
-              number: {{ .Values.prometheus.service.port }}
+    - host: {{ .Values.ingress.prometheus.host }}
+      http:
+        paths:
+          - path: {{ .Values.ingress.prometheus.path }}
+            pathType: {{ .Values.ingress.prometheus.pathType }}
+            backend:
+              service:
+                name: {{ include "monitoring-stack.prometheus.fullname" . }}
+                port:
+                  number: {{ .Values.prometheus.service.port }}
+  {{- if .Values.ingress.kibana.enabled }}
+    - host: {{ .Values.ingress.kibana.host }}
+      http:
+        paths:
+          - path: {{ .Values.ingress.kibana.path }}
+            pathType: {{ .Values.ingress.kibana.pathType }}
+            backend:
+              service:
+                name: {{ include "monitoring-stack.fullname" . }}-kibana
+                port:
+                  number: {{ .Values.kibana.service.port }}
+  {{- end }}
 {{- end }}
 {{- end }}

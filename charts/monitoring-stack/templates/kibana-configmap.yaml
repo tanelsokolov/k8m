@@ -1,0 +1,14 @@
+{{- if .Values.kibana.enabled }}
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ include "monitoring-stack.fullname" . }}-kibana
+  labels:
+    {{- include "monitoring-stack.labels" . | nindent 4 }}
+    app.kubernetes.io/component: kibana
+data:
+  kibana.yml: |
+    {{- range $key, $value := .Values.kibana.config }}
+    {{ $key }}: {{ $value }}
+    {{- end }}
+{{- end }}
