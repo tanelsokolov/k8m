@@ -405,6 +405,13 @@ alertmanager:
       cpu: 200m
       memory: 256Mi
   
+  persistence:
+    enabled: true
+    storageClassName: "standard"
+    accessModes:
+      - ReadWriteOnce
+    size: "1Gi" # Alertmanager data is usually small
+  
   config:
     global:
       smtp_smarthost: 'localhost:587'
