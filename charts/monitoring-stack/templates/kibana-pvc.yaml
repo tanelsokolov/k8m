@@ -1,0 +1,17 @@
+{{- if .Values.kibana.persistence.enabled }}
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: {{ include "monitoring-stack.fullname" . }}-kibana-data
+  namespace: {{ .Values.namespace.name }}
+  labels:
+    {{- include "monitoring-stack.labels" . | nindent 4 }}
+    app.kubernetes.io/component: kibana
+spec:
+  accessModes:
+    {{- toYaml .Values.kibana.persistence.accessModes | nindent 4 }}
+  resources:
+    requests:
+      storage: {{ .Values.kibana.persistence.size }}
+  storageClassName: {{ .Values.kibana.persistence.storageClassName }}
+{{- end }}

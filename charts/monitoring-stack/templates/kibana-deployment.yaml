@@ -31,8 +31,17 @@ spec:
             - name: config
               mountPath: /usr/share/kibana/config/kibana.yml
               subPath: kibana.yml
+            {{- if .Values.kibana.persistence.enabled }}
+            - name: kibana-data
+              mountPath: /usr/share/kibana/data
+            {{- end }}
       volumes:
         - name: config
           configMap:
             name: {{ include "monitoring-stack.fullname" . }}-kibana
+        {{- if .Values.kibana.persistence.enabled }}
+        - name: kibana-data
+          persistentVolumeClaim:
+            claimName: {{ include "monitoring-stack.fullname" . }}-kibana-data
+        {{- end }}
 {{- end }}

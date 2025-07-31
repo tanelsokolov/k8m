@@ -43,6 +43,12 @@ spec:
       - name: config-volume
         configMap:
           name: {{ include "monitoring-stack.prometheus.fullname" . }}-config
+      {{- if .Values.prometheus.persistence.enabled }}
+      - name: storage-volume
+        persistentVolumeClaim:
+          claimName: {{ include "monitoring-stack.prometheus.fullname" . }}-data
+      {{- else }}
       - name: storage-volume
         emptyDir: {}
+      {{- end }}
 {{- end }}

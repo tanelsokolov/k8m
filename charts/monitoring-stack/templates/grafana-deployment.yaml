@@ -40,9 +40,15 @@ spec:
             name: grafana-datasources
             readOnly: false
       volumes:
-        - name: grafana-storage
-          emptyDir: {}
         - name: grafana-datasources
           configMap:
               name: {{ include "monitoring-stack.grafana.fullname" . }}-datasources
+        {{- if .Values.grafana.persistence.enabled }}
+        - name: grafana-storage
+          persistentVolumeClaim:
+            claimName: {{ include "monitoring-stack.grafana.fullname" . }}-data
+        {{- else }}
+        - name: grafana-storage
+          emptyDir: {}
+        {{- end }}
 {{- end }}

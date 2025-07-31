@@ -214,6 +214,13 @@ prometheus:
   # Storage configuration
   storage:
     retention: 200h
+  
+  persistence:
+    enabled: true
+    storageClassName: "standard"
+    accessModes:
+      - ReadWriteOnce
+    size: "10Gi" # Prometheus data can be large, so a larger size is appropriate
 
 # Grafana configuration
 grafana:
@@ -246,6 +253,13 @@ grafana:
     limits:
       cpu: 1000m
       memory: 1Gi
+  
+  persistence:
+    enabled: true
+    storageClassName: "standard"
+    accessModes:
+      - ReadWriteOnce
+    size: "10Gi"
   
   # Datasources
   datasources:
@@ -425,6 +439,13 @@ kibana:
   config:
     server.host: "0.0.0.0"
     elasticsearch.hosts: '["http://elasticsearch.monitoring.svc.cluster.local:9200"]'
+  
+  persistence:
+    enabled: true
+    storageClassName: "standard"
+    accessModes:
+      - ReadWriteOnce
+    size: "10Gi"
 
 # Fluent-bit configuration
 fluent-bit:
