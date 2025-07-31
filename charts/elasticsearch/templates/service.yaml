@@ -6,11 +6,16 @@ metadata:
     {{- include "elasticsearch.labels" . | nindent 4 }}
 spec:
   type: {{ .Values.service.type }}
+  clusterIP: None
   ports:
     - port: {{ .Values.service.port }}
       targetPort: http
       protocol: TCP
       name: http
+    - port: 9300
+      targetPort: transport
+      protocol: TCP
+      name: transport
     - port: 9114
       targetPort: metrics
       protocol: TCP
