@@ -1,4 +1,4 @@
-{{- if and .Values.ingress.enabled (or .Values.ingress.grafana.enabled .Values.ingress.prometheus.enabled) }}
+{{- if .Values.ingress.enabled }}
 {{- if .Values.ingress.grafana.enabled }}
 apiVersion: networking.k8s.io/v1
 kind: Ingress
@@ -61,7 +61,28 @@ spec:
                 name: {{ include "monitoring-stack.prometheus.fullname" . }}
                 port:
                   number: {{ .Values.prometheus.service.port }}
-  {{- if .Values.ingress.kibana.enabled }}
+{{- end }}
+---
+{{- if .Values.ingress.kibana.enabled }}
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: {{ include "monitoring-stack.fullname" . }}-kibana-ingress
+  namespace: {{ .Values.namespace.name }}
+  labels:
+    app: kibana
+  annotations:
+    {{- if .Values.ingress.className }}
+    kubernetes.io/ingress.class: {{ .Values.ingress.className }}
+    {{- end }}
+    {{- with .Values.ingress.annotations }}
+    {{- toYaml . | nindent 4 }}
+    {{- end }}
+spec:
+  {{- if .Values.ingress.className }}
+  ingressClassName: {{ .Values.ingress.className }}
+  {{- end }}
+  rules:
     - host: {{ .Values.ingress.kibana.host }}
       http:
         paths:
@@ -72,6 +93,5 @@ spec:
                 name: {{ include "monitoring-stack.fullname" . }}-kibana
                 port:
                   number: {{ .Values.kibana.service.port }}
-  {{- end }}
 {{- end }}
 {{- end }}
