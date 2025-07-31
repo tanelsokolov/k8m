@@ -97,6 +97,6 @@ roleRef:
   name: {{ include "monitoring-stack.fullname" . }}-prometheus
 subjects:
 - kind: ServiceAccount
-  name: {{ include "monitoring-stack.serviceAccountName" . }}
+  name: {{ include "monitoring-stack.prometheus.fullname" . }}
   namespace: {{ .Values.namespace.name }}
 {{- end }}
