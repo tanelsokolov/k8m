@@ -4,10 +4,7 @@ metadata:
   name: {{ include "metrics-frontend.fullname" . }}
   labels:
     {{- include "metrics-frontend.labels" . | nindent 4 }}
-  annotations:
-    prometheus.io/scrape: "true"
-    prometheus.io/port: "{{ .Values.service.targetPort }}"
-    prometheus.io/path: "/api/metrics"
+  annotations: {}
 spec:
   type: {{ .Values.service.type }}
   ports:
