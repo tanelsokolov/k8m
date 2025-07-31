@@ -16,7 +16,7 @@ spec:
       labels:
         {{- include "monitoring-stack.prometheus.selectorLabels" . | nindent 8 }}
     spec:
-      serviceAccountName: {{ include "monitoring-stack.serviceAccountName" . }}
+      serviceAccountName: {{ include "monitoring-stack.prometheus.fullname" . }}
       containers:
       - name: prometheus
         image: "{{ .Values.prometheus.image.repository }}:{{ .Values.prometheus.image.tag }}"
