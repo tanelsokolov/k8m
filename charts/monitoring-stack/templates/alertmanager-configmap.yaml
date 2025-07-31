@@ -1,0 +1,12 @@
+{{- if .Values.alertmanager.enabled -}}
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ include "monitoring-stack.alertmanager.fullname" . }}
+  labels:
+    {{- include "monitoring-stack.labels" . | nindent 4 }}
+    app.kubernetes.io/component: alertmanager
+data:
+  config.yaml: |
+    {{- toYaml .Values.alertmanager.config | nindent 4 }}
+{{- end }}

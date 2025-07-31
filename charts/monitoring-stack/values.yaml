@@ -211,6 +211,12 @@ prometheus:
         metrics_path: /metrics
         scrape_interval: 30s
 
+    alerting:
+      alertmanagers:
+      - static_configs:
+        - targets:
+          - "monitoring-stack-alertmanager.monitoring.svc.cluster.local:9093"
+
   # Storage configuration
   storage:
     retention: 200h
@@ -427,7 +433,7 @@ kibana:
   service:
     type: ClusterIP
     port: 5601
-  
+   
   resources:
     requests:
       cpu: 500m
