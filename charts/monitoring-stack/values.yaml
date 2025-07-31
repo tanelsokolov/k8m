@@ -171,6 +171,14 @@ prometheus:
         - source_labels: [__meta_kubernetes_ingress_name]
           action: replace
           target_label: kubernetes_ingress_name
+        - source_labels: [__meta_kubernetes_ingress_class_name]
+          regex: 'nginx'
+          action: keep
+        - source_labels: [__meta_kubernetes_ingress_name]
+          target_label: __metrics_path__
+          replacement: /metrics
+        - replacement: 'nginx-ingress-controller.ingress-nginx.svc.cluster.local:80'
+          target_label: __address__
       
       - job_name: 'kube-state-metrics'
         static_configs:
