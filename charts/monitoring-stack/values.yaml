@@ -154,15 +154,16 @@ prometheus:
         - source_labels: [__meta_kubernetes_ingress_annotation_prometheus_io_scrape]
           action: keep
           regex: true
-        - source_labels: [__meta_kubernetes_ingress_annotation_prometheus_io_path]
+        - source_labels: [__meta_kubernetes_ingress_scheme]
+          target_label: __scheme__
           action: replace
+        - source_labels: [__meta_kubernetes_ingress_path]
           target_label: __metrics_path__
-          regex: (.+)
-        - source_labels: [__address__, __meta_kubernetes_ingress_annotation_prometheus_io_port]
           action: replace
-          regex: ([^:]+)(?::\d+)?;(\d+)
-          replacement: $1:$2
+        - source_labels: [__meta_kubernetes_ingress_annotation_prometheus_io_port]
           target_label: __address__
+          action: replace
+          replacement: nginx-ingress-controller.ingress-nginx.svc.cluster.local:${1}
         - action: labelmap
           regex: __meta_kubernetes_ingress_label_(.+)
         - source_labels: [__meta_kubernetes_namespace]
