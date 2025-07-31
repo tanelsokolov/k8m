@@ -84,7 +84,7 @@ data:
     - name: monitoring-logging-alerts
       rules:
       - alert: ElasticsearchClusterStatusYellow
-        expr: elasticsearch_cluster_health_status{cluster="{{ .Values.namespace.name }}", status="yellow"} == 1
+        expr: elasticsearch_cluster_health_status{color="yellow"} == 1
         for: 1m
         labels:
           severity: warning
@@ -92,7 +92,7 @@ data:
           summary: "Elasticsearch cluster status is yellow"
           description: "Elasticsearch cluster {{`{{`}}$labels.cluster{{`}}`}} is in yellow status."
       - alert: ElasticsearchClusterStatusRed
-        expr: elasticsearch_cluster_health_status{cluster="{{ .Values.namespace.name }}", status="red"} == 1
+        expr: elasticsearch_cluster_health_status{color="red"} == 1
         for: 1m
         labels:
           severity: critical

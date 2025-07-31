@@ -11,16 +11,18 @@ rules:
   resources:
   - nodes
   - nodes/proxy
+  - nodes/metrics  # Added: needed for node metrics
   - services
   - endpoints
   - pods
   verbs: ["get", "list", "watch"]
 - apiGroups:
   - extensions
+  - networking.k8s.io  # Added: both API groups for ingresses
   resources:
   - ingresses
   verbs: ["get", "list", "watch"]
-- nonResourceURLs: ["/metrics"]
+- nonResourceURLs: ["/metrics", "/metrics/cadvisor"]  # Added: cadvisor metrics
   verbs: ["get"]
 
 # Kube-state-metrics täiendavad õigused
