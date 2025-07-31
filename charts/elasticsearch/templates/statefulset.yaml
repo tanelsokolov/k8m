@@ -1,5 +1,5 @@
 apiVersion: apps/v1
-kind: Deployment
+kind: StatefulSet
 metadata:
   name: {{ include "elasticsearch.fullname" . }}
   labels:
@@ -9,6 +9,7 @@ spec:
   selector:
     matchLabels:
       {{- include "elasticsearch.selectorLabels" . | nindent 6 }}
+  serviceName: {{ include "elasticsearch.fullname" . }}
   template:
     metadata:
       labels:
@@ -21,13 +22,24 @@ spec:
           env:
             - name: xpack.security.enabled
               value: "false"
-            - name: discovery.type
-              value: "single-node"
             - name: ES_JAVA_OPTS
               value: "-Xms512m -Xmx512m"
+            - name: cluster.name
+              value: {{ .Release.Name }}
+            - name: node.name
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.name
+            - name: discovery.seed_hosts
+              value: "{{ include "elasticsearch.fullname" . }}-0.{{ include "elasticsearch.fullname" . }}.{{ .Release.Namespace }}.svc.cluster.local,{{ include "elasticsearch.fullname" . }}-1.{{ include "elasticsearch.fullname" . }}.{{ .Release.Namespace }}.svc.cluster.local"
+            - name: cluster.initial_master_nodes
+              value: "{{ include "elasticsearch.fullname" . }}-0,{{ include "elasticsearch.fullname" . }}-1"
           ports:
             - name: http
               containerPort: 9200
+              protocol: TCP
+            - name: transport
+              containerPort: 9300
               protocol: TCP
           livenessProbe:
             httpGet:
@@ -61,9 +73,14 @@ spec:
             - name: metrics
               containerPort: 9114
               protocol: TCP
-      {{- if .Values.persistence.enabled }}
-      volumes:
-        - name: elasticsearch-data
-          persistentVolumeClaim:
-            claimName: {{ include "elasticsearch.fullname" . }}-data
-      {{- end }}
+  {{- if .Values.persistence.enabled }}
+  volumeClaimTemplates:
+  - metadata:
+      name: elasticsearch-data
+    spec:
+      accessModes: [ "ReadWriteOnce" ]
+      storageClassName: {{ .Values.persistence.storageClassName }}
+      resources:
+        requests:
+          storage: {{ .Values.persistence.size }}
+  {{- end }}
