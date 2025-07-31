@@ -12,6 +12,9 @@ data:
       scrape_interval: {{ .Values.prometheus.config.global.scrape_interval }}
       evaluation_interval: {{ .Values.prometheus.config.global.evaluation_interval }}
     
+    rule_files:
+      - "/etc/prometheus/rules/*.yaml"
+
     scrape_configs:
 {{- toYaml .Values.prometheus.config.scrape_configs | nindent 6 }}
 {{- end }}
