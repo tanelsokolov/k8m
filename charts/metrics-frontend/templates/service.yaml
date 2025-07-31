@@ -7,7 +7,7 @@ metadata:
   annotations:
     prometheus.io/scrape: "true"
     prometheus.io/port: "{{ .Values.service.targetPort }}"
-    prometheus.io/path: "/metrics"
+    prometheus.io/path: "/api/metrics"
 spec:
   type: {{ .Values.service.type }}
   ports:
