@@ -305,7 +305,7 @@ ingress:
 serviceAccount:
   create: true
   annotations: {}
-  name: "monitoring-stack-kube-state-metrics"
+  # name: "monitoring-stack-kube-state-metrics" # Removed to avoid conflict with kube-state-metrics's own service account
 
 # RBAC
 rbac:
