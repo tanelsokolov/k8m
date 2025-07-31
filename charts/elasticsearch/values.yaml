@@ -1,5 +1,5 @@
 # Default values for elasticsearch.
-replicaCount: 1
+replicaCount: 2
 
 image:
   repository: docker.elastic.co/elasticsearch/elasticsearch
