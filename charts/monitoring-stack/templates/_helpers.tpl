@@ -97,6 +97,29 @@ Grafana fullname
 {{- end }}
 
 {{/*
+Alertmanager labels
+*/}}
+{{- define "monitoring-stack.alertmanager.labels" -}}
+{{ include "monitoring-stack.labels" . }}
+app.kubernetes.io/component: alertmanager
+{{- end }}
+
+{{/*
+Alertmanager selector labels
+*/}}
+{{- define "monitoring-stack.alertmanager.selectorLabels" -}}
+{{ include "monitoring-stack.selectorLabels" . }}
+app.kubernetes.io/component: alertmanager
+{{- end }}
+
+{{/*
+Alertmanager fullname
+*/}}
+{{- define "monitoring-stack.alertmanager.fullname" -}}
+{{- printf "%s-alertmanager" (include "monitoring-stack.fullname" .) }}
+{{- end }}
+
+{{/*
 Create the name of the service account to use
 */}}
 {{- define "monitoring-stack.serviceAccountName" -}}
