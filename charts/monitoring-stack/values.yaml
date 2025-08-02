@@ -123,10 +123,7 @@ prometheus:
         - source_labels: [__meta_kubernetes_service_name]
           action: replace
           target_label: kubernetes_service_name
-      
-      - job_name: 'kube-state-metrics'
-        static_configs:
-          - targets: ['monitoring-stack-kube-state-metrics.monitoring.svc.cluster.local:8080']
+
       
       - job_name: 'node-exporter'
         static_configs:
