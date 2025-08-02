@@ -17,8 +17,8 @@ prometheus:
   
   service:
     type: ClusterIP
-    port: 9090
-    targetPort: 8080
+    port: 8080
+    targetPort: 9090
     annotations:
       prometheus.io/scrape: 'true'
       prometheus.io/port: '9090'
