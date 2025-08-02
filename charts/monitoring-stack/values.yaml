@@ -121,6 +121,9 @@ prometheus:
           action: replace
           target_label: kubernetes_service_name
       
+      - job_name: 'kube-state-metrics'
+        static_configs:
+          - targets: ['monitoring-stack-kube-state-metrics.monitoring.svc.cluster.local:8080']
       
       - job_name: 'node-exporter'
         static_configs:
@@ -271,9 +274,7 @@ kubeStateMetrics:
     type: ClusterIP
     port: 8080
     targetPort: 8080
-    annotations:
-      prometheus.io/scrape: 'true'
-      prometheus.io/port: '8080'
+    annotations: {}
   
   resources:
     requests:
