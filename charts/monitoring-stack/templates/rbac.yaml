@@ -30,6 +30,9 @@ rules:
   resources:
   - configmaps
   - secrets
+  verbs: ["get", "list", "watch"]
+- apiGroups: [""]
+  resources:
   - nodes
   - pods
   - services
@@ -40,50 +43,50 @@ rules:
   - persistentvolumes
   - namespaces
   - endpoints
-  verbs: ["list", "watch"]
+  verbs: ["get", "list", "watch"]
 - apiGroups: ["apps"]
   resources:
   - daemonsets
   - deployments
   - replicasets
   - statefulsets
-  verbs: ["list", "watch"]
+  verbs: ["get", "list", "watch"]
 - apiGroups: ["batch"]
   resources:
   - cronjobs
   - jobs
-  verbs: ["list", "watch"]
+  verbs: ["get", "list", "watch"]
 - apiGroups: ["autoscaling"]
   resources:
   - horizontalpodautoscalers
-  verbs: ["list", "watch"]
+  verbs: ["get", "list", "watch"]
 - apiGroups: ["policy"]
   resources:
   - poddisruptionbudgets
-  verbs: ["list", "watch"]
+  verbs: ["get", "list", "watch"]
 - apiGroups: ["certificates.k8s.io"]
   resources:
   - certificatesigningrequests
-  verbs: ["list", "watch"]
+  verbs: ["get", "list", "watch"]
 - apiGroups: ["storage.k8s.io"]
   resources:
   - storageclasses
   - volumeattachments
-  verbs: ["list", "watch"]
+  verbs: ["get", "list", "watch"]
 - apiGroups: ["admissionregistration.k8s.io"]
   resources:
   - mutatingwebhookconfigurations
   - validatingwebhookconfigurations
-  verbs: ["list", "watch"]
+  verbs: ["get", "list", "watch"]
 - apiGroups: ["networking.k8s.io"]
   resources:
   - networkpolicies
   - ingresses
-  verbs: ["list", "watch"]
+  verbs: ["get", "list", "watch"]
 - apiGroups: ["coordination.k8s.io"]
   resources:
   - leases
-  verbs: ["list", "watch"]
+  verbs: ["get", "list", "watch"]
 ---
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRoleBinding
@@ -99,20 +102,20 @@ subjects:
 - kind: ServiceAccount
   name: {{ include "monitoring-stack.prometheus.fullname" . }}
   namespace: {{ .Values.namespace.name }}
-{{- end }}
-
-
+---
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRoleBinding
 metadata:
   name: {{ include "monitoring-stack.fullname" . }}-kube-state-metrics
   labels:
-    {{- include "monitoring-stack.kubeStateMetrics.labels" . | nindent 4 }}
+    {{- include "monitoring-stack.labels" . | nindent 4 }}
+    app.kubernetes.io/component: kube-state-metrics
 roleRef:
   apiGroup: rbac.authorization.k8s.io
   kind: ClusterRole
-  name: {{ include "monitoring-stack.fullname" . }}-prometheus  # Kasutab sama ClusterRole'i
+  name: kube-state-metrics
 subjects:
 - kind: ServiceAccount
-  name: {{ include "monitoring-stack.kubeStateMetrics.fullname" . }}
+  name: {{ include "monitoring-stack.fullname" . }}-kube-state-metrics
   namespace: {{ .Values.namespace.name }}
+{{- end }}
