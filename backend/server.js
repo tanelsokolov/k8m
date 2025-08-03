@@ -5,12 +5,12 @@ import os from 'os';
 import axios from 'axios';
 import client from 'prom-client';
 import winston from 'winston';
-
+//test
 const app = express();
 const PORT = process.env.PORT || 3000;
 
 app.use(cors());
-app.use(express.json());
+app.use(express.json()); 
 
 // Winston Logger Configuration
 const logger = winston.createLogger({
@@ -350,10 +350,10 @@ app.get('/metrics', async (req, res) => {
       
       // Configuration for remote servers using WireGuard VPN IPs
       const servers = [
-       // { url: 'http://192.168.189.102:3000/local-metrics' }, // web-server-1
-      //  { url: 'http://192.168.189.103:3000/local-metrics' }, // web-server-2
-       // { url: 'http://192.168.189.104:3000/local-metrics' },  // load-balancer
-      //  { url: 'http://192.168.189.105:3000/local-metrics' },  // cicd server
+        //{ url: 'http://192.168.189.102:3000/local-metrics' }, // web-server-1
+        //{ url: 'http://192.168.189.103:3000/local-metrics' }, // web-server-2
+        //{ url: 'http://192.168.189.104:3000/local-metrics' },  // load-balancer
+        //{ url: 'http://192.168.189.105:3000/local-metrics' },  // cicd server
         // test full app server down
       ];
       
@@ -542,6 +542,12 @@ app.get('/health/detailed', async (req, res) => {
   }
 });
 
+app.get('/simulate-error', (req, res) => {
+  customMetrics.metricsCollectionErrors.inc({ type: 'manual_test', hostname: os.hostname() });
+  logger.warn('Manual test error triggered');
+  res.status(500).json({ message: 'Simuleeritud error registreeritud' }); 
+});
+
 // Graceful shutdown handling
 process.on('SIGTERM', () => {
   logger.info('SIGTERM received, shutting down gracefully');
@@ -561,4 +567,4 @@ app.listen(PORT, '0.0.0.0', () => {
     nodeVersion: process.version
   });
   console.log(`Metrics server running on port ${PORT}`);
-}); // backend update
+});
