@@ -28,9 +28,7 @@ kubectl apply -f insufficient-resources-pod.yaml
 Cluster-related alerts:
 
 Kubernetes API server becomes unreachable
-minikube ssh
-docker ps | grep kube-apiserver
-docker stop k8s_kube-apiserver_kube-apiserver-minikube_kube-system_78e1292e1d47cc7d09b2c6f5826fa624_7
+values.yaml failis muuta kubernetes regex
 
 
 Monitoring and Logging system alerts:
