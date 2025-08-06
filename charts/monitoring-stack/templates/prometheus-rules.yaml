@@ -21,7 +21,7 @@ data:
           summary: "High CPU usage on node {{`{{`}}$labels.instance{{`}}`}}"
           description: "Node CPU usage is at {{`{{`}} printf \"%.2f\" $value {{`}}`}}% for more than 5 minutes."
       - alert: LowDiskSpace
-        expr: node_filesystem_avail_bytes{mountpoint="/mnt/testdisk"} / node_filesystem_size_bytes{mountpoint="/mnt/testdisk"} * 100 < 20
+        expr: node_filesystem_avail_bytes{mountpoint="/mnt/testdisk", job="node-exporter"} / node_filesystem_size_bytes{mountpoint="/mnt/testdisk", job="node-exporter"} * 100 < 20
         for: 5m
         labels:
           severity: critical
