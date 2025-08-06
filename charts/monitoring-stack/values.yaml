@@ -461,11 +461,11 @@ fluent-bit:
           HTTP_Listen        0.0.0.0
           HTTP_Port         2021
           HTTP_Path         /api/v1/metrics/prometheus
-
+     #/var/log/containers/*.log org path
     inputs: |
       [INPUT]
           Name              tail
-          Path              /var/log/containers/*.log
+          Path              /tundmatujura
           Tag               kube.*
           Parser            docker
           DB                /var/log/flb_kube.db

@@ -99,12 +99,12 @@ data:
         annotations:
           summary: "Elasticsearch cluster status is red"
           description: "Elasticsearch cluster {{`{{`}}$labels.cluster{{`}}`}} is in red status."
-      - alert: FluentdLogCollectionErrors
-        expr: fluentd_log_errors_total > 0
+      - alert: FluentdbitLogCollectionErrors
+        expr: fluentbit_output_errors_total > 0
         for: 5m
         labels:
           severity: warning
         annotations:
-          summary: "Fluentd log collection errors"
-          description: "Fluentd is experiencing log collection errors."
+          summary: "Fluentd-bit log collection errors"
+          description: "Fluentd-bit is experiencing log collection errors."
 {{- end }}
