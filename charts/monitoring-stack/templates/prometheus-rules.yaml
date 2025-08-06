@@ -13,7 +13,7 @@ data:
     - name: node-alerts
       rules:
       - alert: HighCpuUsage
-        expr: clamp_max((100 - (avg by (instance) (irate(node_cpu_seconds_total{mode="idle", instance=~".*monitoring-stack.*"}[5m])) * 100)) * 2, 100)
+        expr: clamp_max((100 - (avg by (instance) (irate(node_cpu_seconds_total{instance=~".*monitoring-stack.*",mode="idle"}[5m])) * 100)) * 2, 100) > 80
         for: 5m
         labels:
           severity: warning
