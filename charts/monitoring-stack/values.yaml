@@ -461,11 +461,11 @@ fluent-bit:
           HTTP_Listen        0.0.0.0
           HTTP_Port         2021
           HTTP_Path         /api/v1/metrics/prometheus
-     #/var/log/containers/*.log org path
+
     inputs: |
       [INPUT]
           Name              tail
-          Path              /tundmatujura
+          Path              /var/log/containers/*.log
           Tag               kube.*
           Parser            docker
           DB                /var/log/flb_kube.db
@@ -490,7 +490,7 @@ fluent-bit:
       [OUTPUT]
           Name            es
           Match           *
-          Host            elasticsearch.monitoring.svc.cluster.local
+          Host            katkine.elasticsearch.monitoring.svc.cluster.local
           Port            9200
           Logstash_Format Off
           Logstash_Prefix kubernetes_logs
