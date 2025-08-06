@@ -10,14 +10,21 @@ stress-ng --cpu 4 --timeout 3360s
 
 
 Node available disk space falls below 20%
+dd if=/dev/zero of=/mnt/testdisk/fill bs=1M count=90
 
 
 Node memory usage exceeds 90% for more than 5 minutes
+
 Pod and Container-related alerts:
 
 Pod restarts more than 3 times in 15 minutes
+kubectl run test-pod --image=alpine --restart=Always -- /bin/sh -c "sleep 10; exit 1"
+kubectl delete pod test-pod
+
 Container memory usage exceeds 80% of its limit
 Pod is in a pending state for more than 5 minutes
+kubectl apply -f insufficient-resources-pod.yaml
+
 Cluster-related alerts:
 
 Kubernetes API server becomes unreachable
@@ -27,6 +34,6 @@ docker stop k8s_kube-apiserver_kube-apiserver-minikube_kube-system_78e1292e1d47c
 
 
 Monitoring and Logging system alerts:
-
 Elasticsearch cluster status changes to yellow or red
+
 Fluentd experiences log collection errors
