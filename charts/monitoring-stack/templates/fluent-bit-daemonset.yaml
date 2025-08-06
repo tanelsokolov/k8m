@@ -16,6 +16,10 @@ spec:
       labels:
         {{- include "monitoring-stack.selectorLabels" . | nindent 8 }}
         app.kubernetes.io/component: fluent-bit
+      annotations:
+        prometheus.io/scrape: "true"
+        prometheus.io/port: "2021"
+        prometheus.io/path: "/api/v1/metrics/prometheus"
     spec:
       serviceAccountName: {{ include "monitoring-stack.fullname" . }}-fluent-bit
       containers:
@@ -35,6 +39,10 @@ spec:
               readOnly: true
             - name: config
               mountPath: /fluent-bit/etc/
+          ports:
+            - name: metrics
+              containerPort: 2021
+              protocol: TCP
       volumes:
         - name: varlog
           hostPath:
