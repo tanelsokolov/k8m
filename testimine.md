@@ -6,10 +6,12 @@ curl http://localhost:3000/fake-endpoint
 Node-related alerts:
 
 Node CPU usage exceeds 80% for more than 5 minutes
-stress-ng --cpu 8 --timeout 360s
+stress-ng --cpu 4 --timeout 3360s
 
 
 Node available disk space falls below 20%
+
+
 Node memory usage exceeds 90% for more than 5 minutes
 Pod and Container-related alerts:
 
