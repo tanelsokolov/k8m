@@ -71,7 +71,7 @@ data:
     - name: cluster-alerts
       rules:
       - alert: KubernetesApiServerDown
-        expr: up{job="kubernetes-apiservers"} == 0
+        expr: absent(up{job="kubernetes-apiservers"})
         for: 1m
         labels:
           severity: critical
