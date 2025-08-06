@@ -15,12 +15,11 @@ data:
     rule_files:
       - "/etc/prometheus/rules/*.yaml"
 
+    {{- if .Values.prometheus.config.alerting }}
     alerting:
-      alertmanagers:
-      - static_configs:
-        - targets:
-          - {{ include "monitoring-stack.alertmanager.fullname" . }}.{{ .Values.namespace.name }}.svc.cluster.local:{{ .Values.alertmanager.service.port }}
-    
+{{- toYaml .Values.prometheus.config.alerting | nindent 6 }}
+    {{- end }}
+
     scrape_configs:
 {{- toYaml .Values.prometheus.config.scrape_configs | nindent 6 }}
 {{- end }}
