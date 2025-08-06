@@ -33,5 +33,7 @@ values.yaml failis muuta kubernetes regex
 
 Monitoring and Logging system alerts:
 Elasticsearch cluster status changes to yellow or red
+es0 maha
 
 Fluentd experiences log collection errors
+values failist es output lõhkuda
