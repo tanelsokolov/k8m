@@ -490,7 +490,7 @@ fluent-bit:
       [OUTPUT]
           Name            es
           Match           *
-          Host            katkine.elasticsearch.monitoring.svc.cluster.local
+          Host            elasticsearch.monitoring.svc.cluster.local
           Port            9200
           Logstash_Format Off
           Logstash_Prefix kubernetes_logs
