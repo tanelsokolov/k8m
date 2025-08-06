@@ -158,10 +158,18 @@ prometheus:
         scrape_interval: 30s
         
       - job_name: 'fluent-bit'
-        static_configs:
-          - targets: ['monitoring-stack-fluent-bit.monitoring.svc.cluster.local:2021']
-        metrics_path: /api/v1/metrics/prometheus
-        scrape_interval: 10s
+        kubernetes_sd_configs:
+          - role: endpoints
+            namespaces:
+              names:
+                - monitoring
+        relabel_configs:
+          - source_labels: [__meta_kubernetes_service_label_app_kubernetes_io_component]
+            regex: fluent-bit
+            action: keep
+          - source_labels: [__meta_kubernetes_endpoint_port_name]
+            regex: metrics
+            action: keep
 
 
     alerting:
