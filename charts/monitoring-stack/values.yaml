@@ -158,7 +158,7 @@ prometheus:
         scrape_interval: 30s
         
       - job_name: 'fluent-bit'
-        metrics_path: /api/v1/metrics
+        metrics_path: /api/v1/metrics/prometheus
         kubernetes_sd_configs:
           - role: endpoints
             namespaces:
