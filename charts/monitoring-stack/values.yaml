@@ -158,7 +158,7 @@ prometheus:
         scrape_interval: 30s
         
       - job_name: 'fluent-bit'
-        metrics_path: /metrics
+        metrics_path: /api/v1/metrics/prometheus
         kubernetes_sd_configs:
           - role: endpoints
             namespaces:
@@ -443,7 +443,7 @@ fluent-bit:
     annotations:
       prometheus.io/scrape: "true"
       prometheus.io/port: "2021"
-      prometheus.io/path: "/metrics"
+      prometheus.io/path: "/api/v1/metrics/prometheus"
   
   resources:
     requests:
@@ -479,6 +479,11 @@ fluent-bit:
           Skip_Long_Lines   On
           Refresh_Interval  10
 
+      [INPUT]
+          Name              fluentbit_metrics
+          Tag               internal_metrics
+          Scrape_Interval   2
+
     filters: |
       [FILTER]
           Name                kubernetes
@@ -495,7 +500,7 @@ fluent-bit:
     outputs: |
       [OUTPUT]
           Name            es
-          Match           *
+          Match           kube.*
           Host            elasticsearch.monitoring.svc.cluster.local
           Port            9200
           Logstash_Format Off
@@ -506,7 +511,7 @@ fluent-bit:
 
       [OUTPUT]
           Name   prometheus_exporter
-          Match  *
+          Match  internal_metrics
           Host   0.0.0.0
           Port   2021
 
