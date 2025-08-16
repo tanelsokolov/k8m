@@ -10,6 +10,7 @@ stress-ng --cpu 4 --timeout 3360s
 
 
 Node available disk space falls below 20%
+sudo mount -t tmpfs -o size=100M tmpfs /mnt/testdisk
 dd if=/dev/zero of=/mnt/testdisk/fill bs=1M count=90
 
 
@@ -24,6 +25,7 @@ kubectl delete pod test-pod
 Container memory usage exceeds 80% of its limit
 Pod is in a pending state for more than 5 minutes
 kubectl apply -f insufficient-resources-pod.yaml
+
 
 Cluster-related alerts:
 
