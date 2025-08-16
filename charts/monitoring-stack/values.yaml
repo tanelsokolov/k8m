@@ -460,7 +460,7 @@ fluent-bit:
           HTTP_Server        On
           HTTP_Listen        0.0.0.0
           HTTP_Port         2021
-          HTTP_Path         /api/v1/metrics/prometheus
+          HTTP_Path         /api/v1/metrics
 
     inputs: |
       [INPUT]
