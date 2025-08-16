@@ -158,7 +158,7 @@ prometheus:
         scrape_interval: 30s
         
       - job_name: 'fluent-bit'
-        metrics_path: /api/v1/metrics
+        metrics_path: /metrics
         kubernetes_sd_configs:
           - role: endpoints
             namespaces:
@@ -430,6 +430,21 @@ fluent-bit:
     tag: 4.0.5
     pullPolicy: IfNotPresent
   
+  # Service configuration to expose metrics
+  service:
+    type: ClusterIP
+    ports:
+      - name: metrics
+        port: 2021
+        targetPort: 2021
+        protocol: TCP
+    labels:
+      app.kubernetes.io/component: fluent-bit
+    annotations:
+      prometheus.io/scrape: "true"
+      prometheus.io/port: "2021"
+      prometheus.io/path: "/metrics"
+  
   resources:
     requests:
       cpu: 100m
@@ -452,15 +467,6 @@ fluent-bit:
           HC_Errors_Count 5
           HC_Retry_Failure_Count 5
           HC_Period     10
-
-    # Add metrics configuration
-    metrics: |
-      [METRICS]
-          Scrape_Interval     10
-          HTTP_Server        On
-          HTTP_Listen        0.0.0.0
-          HTTP_Port         2021
-          HTTP_Path         /api/v1/metrics
 
     inputs: |
       [INPUT]
