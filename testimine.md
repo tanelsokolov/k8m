@@ -19,6 +19,8 @@ Node-related alerts:
 Node CPU usage exceeds 80% for more than 5 minutes
 stress-ng --cpu 4 --timeout 3360s
 
+Alert is created for node memory usage exceeding 90% for more than 5 minutes
+
 
 Node available disk space falls below 20%
 sudo mount -t tmpfs -o size=100M tmpfs /mnt/testdisk
