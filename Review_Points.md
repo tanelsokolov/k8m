@@ -107,7 +107,7 @@ If a pod exceeds memory limits, it gets OOMKilled and potentially restarted base
 **A:** Used GitHub Actions because of easy setup, have used it in previous tasks.
 
 ### Student can demonstrate how to secure secrets used in the CI/CD pipeline and explain the management and rotation of these secrets
-**A:** Store secrets in Kubernetes Secrets objects, use sealed-secrets or external secret management tools, and implement proper secret rotation policies.
+**A:** I stored secrets inside GitHub Actions, secret keys are rotated every 30 days.
 
 ### Student can explain how to implement rolling updates in deployment strategy and handle failed deployments and rollbacks
 **A:** Following commands do all of those.
@@ -122,16 +122,16 @@ kubectl rollout undo deployment/app
 **A:** I used a package inside my original application and used it to create new Prometheus acceptable metrics. Also needed to create a endpoint for Prometheus to scrape.
 
 ### Student can show how to configure Prometheus to use service discovery for scraping metrics and address challenges in ensuring all necessary targets are discovered
-**A:** Use Kubernetes service discovery with proper role configurations and relabeling rules to discover targets automatically.
+**A:** Can be seen in values.yaml file starting form line 40. Challenges are that some info can be scraped multiple times by different applications if not filtered out.
 
 ### Student can explain how to set up log rotation and retention policies in the EFK stack and manage log storage to prevent disk space issues
 **A:** Configure log rotation policies, set retention periods, and monitor disk usage. Use index lifecycle management to automatically delete old logs.
 
 ### Student can describe the process of defining alert rules and routing them through Alertmanager
-**A:** Define alert rules based on metrics thresholds and configure routing to different notification channels. Implement grouping and inhibition rules to reduce noise.
+**A:** Alert rules are being set inside prometehus-rules.yaml file and Alermanager scrapes said alerts from Prometheus.
 
 ### Student can show how to configure alerting for frequent pod restarts and implement alert grouping and throttling to reduce alert fatigue
-**A:** Create alert rules for pod restart metrics with appropriate grouping by namespace/deployment and set throttling intervals to prevent alert spam.
+**A:** Alert rule is made in prometheus-rules.yaml and is grouped into Pod-Alerts group and alert fires if there is more than 15 restarts in 3 minutes.
 
 ## Security Implementation
 
@@ -148,12 +148,14 @@ kubectl rollout undo deployment/app
 **A:** Secrets can be mounted as volumes in the filesystem or injected as environment variables using secretKeyRef in pod specifications.
 
 ### No sensitive information (API keys, passwords, ssh keys, etc) is exposed in plain text in configuration files or manifests
-**Requirement Met:** All sensitive data properly secured using Kubernetes Secrets.
+**Requirement Met:** No sensitive information in any files.
 
 ### Appropriate namespaces are created for different components of the application
 **A:** Namespace strategy:
 - `argocd` - ArgoCD pod manager
 - `monitoring` - Prometheus, Grafana
+- `kube-system` - Kube-Proxy/ApiServer ect.
+- `ingress-nginx` - Ingress
 
 
 ## Advanced Troubleshooting

@@ -37,6 +37,7 @@ prometheus:
       scrape_interval: 15s
       evaluation_interval: 15s
     
+    # Prometheus auto-discovery configuration for various targets
     scrape_configs:
       - job_name: 'prometheus'
         static_configs:

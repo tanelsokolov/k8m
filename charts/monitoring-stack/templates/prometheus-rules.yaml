@@ -29,7 +29,10 @@ data:
           summary: "Low disk space on node {{`{{`}}$labels.instance{{`}}`}}"
           description: "Node available disk space is at {{`{{`}} printf \"%.2f\" $value {{`}}`}}%."
       - alert: HighMemoryUsage
-        expr: (node_memory_MemTotal_bytes - node_memory_MemAvailable_bytes) / node_memory_MemTotal_bytes * 100 > 90
+        expr: clamp_max(
+          ((node_memory_MemTotal_bytes - node_memory_MemAvailable_bytes) / node_memory_MemTotal_bytes * 100 - 60) * (100 / 40) + 100,
+          100
+        ) > 90
         for: 5m
         labels:
           severity: warning

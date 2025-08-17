@@ -1,3 +1,14 @@
+
+Näidata töötavaid rakendusi
+näidata et on 1 backend 2 fronti
+näidata et kõik toimib
+näidata prometheus
+näidata grafana
+näidata kibana
+alertide testid
+näidata namespaced ette
+
+
 up{job="kubernetes-apiservers"} == 0
 
 kubectl exec -it metrics-backend-678bbb9578-zxqh8 -n monitoring -- /bin/sh
@@ -14,15 +25,12 @@ sudo mount -t tmpfs -o size=100M tmpfs /mnt/testdisk
 dd if=/dev/zero of=/mnt/testdisk/fill bs=1M count=90
 
 
-Node memory usage exceeds 90% for more than 5 minutes
-
 Pod and Container-related alerts:
 
 Pod restarts more than 3 times in 15 minutes
 kubectl run test-pod --image=alpine --restart=Always -- /bin/sh -c "sleep 10; exit 1"
 kubectl delete pod test-pod
 
-Container memory usage exceeds 80% of its limit
 Pod is in a pending state for more than 5 minutes
 kubectl apply -f insufficient-resources-pod.yaml
 
@@ -39,3 +47,15 @@ es0 maha
 
 Fluentd experiences log collection errors
 values failist es output lõhkuda
+
+Näidata github actionsis secreteid.
+https://github.com/tanelsokolov/k8m/settings/secrets/actions
+
+Secretite demo
+kubectl create secret generic db-secret --from-literal=username=myuser --from-literal=password=mypassword
+
+kubectl apply -f secret-demo-deployment.yaml
+
+kubectl get pods
+
+kubectl logs <podi-nimi>
