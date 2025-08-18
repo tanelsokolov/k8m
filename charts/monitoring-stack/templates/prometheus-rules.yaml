@@ -31,8 +31,8 @@ data:
       - alert: HighMemoryUsage
         expr: clamp_max(
           (
-            (node_memory_MemTotal_bytes - node_memory_MemAvailable_bytes)
-            / node_memory_MemTotal_bytes * 100
+            (node_memory_MemTotal_bytes{job="kubernetes-endpoints"} - node_memory_MemAvailable_bytes{job="kubernetes-endpoints"})
+            / node_memory_MemTotal_bytes{job="kubernetes-endpoints"} * 100
             - 60
           ) * (100 / 40) + 100,
           100
