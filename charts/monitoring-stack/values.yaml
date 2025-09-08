@@ -157,6 +157,12 @@ prometheus:
           - targets: ['elasticsearch.monitoring.svc.cluster.local:9114']
         metrics_path: /metrics
         scrape_interval: 30s
+
+      - job_name: 'Windows host'
+        static_configs:
+          - targets: ['192.168.83.1:9182']
+        metrics_path: /metrics
+        scrape_interval: 30s
         
       - job_name: 'fluent-bit'
         metrics_path: /api/v1/metrics/prometheus
