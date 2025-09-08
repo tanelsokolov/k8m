@@ -28,14 +28,14 @@ Access ArgoCD UI at [https://localhost:8080](https://localhost:8080).
 
 ## 3. Configure ArgoCD
 
-- Login with default credentials (`admin` / initial password from `kubectl -n argocd get secret argocd-initial-admin-secret -o jsonpath="{.data.password}" | base64 -d`).
+- Login with default credentials (`admin` / initial password from `kubectl -n argocd get secret argocd-initial-admin-secret -o go-template="{{.data.password | base64decode}}"`).
 - Connect ArgoCD to your GitHub repo (Settings → Repositories).
 
 ## 4. Deploy the Metrics Suite (App of Apps Pattern)
 
 Apply the App of Apps manifest:
 ```sh
-kubectl apply -f argocd/app-of-apps/metrics-suite.yaml -n argocd
+kubectl apply -f argocd/apps-of-suite/metrics-suite.yaml -n argocd
 ```
 This will create all child applications for backend and frontend (dev/prod).
 
