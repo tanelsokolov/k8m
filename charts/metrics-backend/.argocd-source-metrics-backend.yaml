@@ -4,5 +4,5 @@ helm:
     value: tanelsokolov/metrics-backend
     forcestring: true
   - name: image.tag
-    value: prod-20250724-065541
+    value: 20250908-090851
     forcestring: true
