@@ -1,5 +1,5 @@
 helm:
   parameters:
   - name: image.tag
-    value: 20250908-092521
+    value: 20250908-100350
     forcestring: true
