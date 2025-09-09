@@ -53,7 +53,7 @@ prometheus:
         relabel_configs:
         - source_labels: [__meta_kubernetes_namespace, __meta_kubernetes_service_name, __meta_kubernetes_endpoint_port_name]
           action: keep
-          regex: default;kubernetes;https #kubernetes vahetatud "katki" api testiks
+          regex: default;katki;https #kubernetes vahetatud "katki" api testiks
       
       - job_name: 'kubernetes-nodes'
         kubernetes_sd_configs:
