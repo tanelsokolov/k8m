@@ -107,7 +107,7 @@ data:
           summary: "Elasticsearch cluster status is red"
           description: "Elasticsearch cluster {{`{{`}}$labels.cluster{{`}}`}} is in red status."
       - alert: FluentdbitLogCollectionErrors
-        expr: fluentbit_output_retries_failed_total{job="fluent-bit"} > 0
+        expr: increase(fluentbit_output_retries_failed_total{job="fluent-bit"}[5m])
         for: 5m
         labels:
           severity: warning
