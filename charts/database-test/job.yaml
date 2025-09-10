@@ -8,7 +8,7 @@ spec:
     spec:
       containers:
       - name: psql-client
-        image: postgres:latest # Use the latest PostgreSQL client image
+        image: postgres:12 # Use a specific stable PostgreSQL client image
         command: ["/bin/bash", "-c"]
         args:
           - |
