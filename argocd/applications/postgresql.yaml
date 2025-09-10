@@ -7,7 +7,7 @@ spec:
   project: default
   source:
     repoURL: https://charts.bitnami.com/bitnami
-    targetRevision: latest # Use the latest stable version
+    targetRevision: 17.6 # Use PostgreSQL version 17.6
     chart: postgresql
     helm:
       values: |
