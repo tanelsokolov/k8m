@@ -1,0 +1,4 @@
+kubectl exec -it postgresql-0 -- psql -h localhost -U postgres -d postgres
+postgres
+SELECT * FROM inventory;
+INSERT INTO inventory (item_name) VALUES ('Kruvikeeraja');

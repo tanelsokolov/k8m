@@ -17,7 +17,7 @@ spec:
             size: 8Gi # Adjust size as needed
   destination:
     server: https://kubernetes.default.svc
-    namespace: default # Or your desired namespace
+    namespace: default
   syncPolicy:
     automated:
       prune: true
