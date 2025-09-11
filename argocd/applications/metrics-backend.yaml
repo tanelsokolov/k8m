@@ -9,8 +9,9 @@ metadata:
     argocd-image-updater.argoproj.io/write-back-method: git
     argocd-image-updater.argoproj.io/git-branch: main
     
-    # Timestamp-based versioning (mitte semantic versioning)
+    # Timestamp-based versioning
     argocd-image-updater.argoproj.io/backend.update-strategy: semver
+    argocd-image-updater.argoproj.io/backend.semver-constraint: "~1.0.0"
     argocd-image-updater.argoproj.io/backend.allow-tags: regexp:^v[0-9]+\.[0-9]+\.[0-9]+$
     argocd-image-updater.argoproj.io/backend.ignore-tags: latest,dev-latest,dev-.*
     
