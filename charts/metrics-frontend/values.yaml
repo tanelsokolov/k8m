@@ -52,11 +52,11 @@ cors:
 
 resources:
   limits:
-    cpu: 200m
-    memory: 256Mi
-  requests:
     cpu: 50m
     memory: 64Mi
+  requests:
+    cpu: 10m   
+    memory: 16Mi
 
 nodeSelector: {}
 
