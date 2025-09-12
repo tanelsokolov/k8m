@@ -25,7 +25,7 @@ securityContext:
   readOnlyRootFilesystem: false
 
 service:
-  type: LoadBalancer
+  type: ClusterIP
   port: 80
   targetPort: 5173
 
