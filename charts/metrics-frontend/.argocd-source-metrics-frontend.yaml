@@ -4,5 +4,5 @@ helm:
     value: tanelsokolov/metrics-frontend
     forcestring: true
   - name: image.tag
-    value: v1.0.5
+    value: v2.0.1
     forcestring: true
