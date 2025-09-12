@@ -18,7 +18,7 @@ metadata:
     # Git commit seaded
     argocd-image-updater.argoproj.io/git-commit-user: argocd-image-updater
     argocd-image-updater.argoproj.io/git-commit-email: argocd-image-updater@tanelsokolov.dev
-    argocd-parameter name="git-commit-message: "chore: update {{.AppName}} frontend image to {{.NewTag}}"
+    argocd-image-updater.argoproj.io/git-commit-message: "chore: update {{.AppName}} frontend image to {{.NewTag}}"
 spec:
   project: default
   source:
