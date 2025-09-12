@@ -1,8 +1,5 @@
 helm:
   parameters:
-  - name: image.name
-    value: tanelsokolov/metrics-frontend
-    forcestring: true
   - name: image.tag
-    value: v1.0.8
+    value: v2.0.1
     forcestring: true
