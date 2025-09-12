@@ -5,20 +5,20 @@ metadata:
   namespace: argocd
   annotations:
     # Image Updater konfiguratsiooni annotaatsioonid
-    argocd-image-updater.argoproj.io/image-list: frontend=tanelsokolov/metrics-backend
+    argocd-image-updater.argoproj.io/image-list: frontend=tanelsokolov/metrics-frontend  # Parandatud image nimi
     argocd-image-updater.argoproj.io/write-back-method: git
     argocd-image-updater.argoproj.io/git-branch: main
     
-    # Timestamp-based versioning (mitte semantic versioning)
+    # Semantic versioning - ainult patch updates
     argocd-image-updater.argoproj.io/frontend.update-strategy: semver
-    argocd-image-updater.argoproj.io/frontend.semver-constraint: "~1.0.0"
-    argocd-image-updater.argoproj.io/frontend.allow-tags: regexp:^v[0-9]+\.[0-9]+\.[0-9]+$
+    argocd-image-updater.argoproj.io/frontend.semver-constraint: "~1.0.0"  # Lubab ainult 1.0.x versioone
+    argocd-image-updater.argoproj.io/frontend.allow-tags: regexp:^v1\.0\.[0-9]+$  # Ainult v1.0.x tagid
     argocd-image-updater.argoproj.io/frontend.ignore-tags: latest,dev-latest,dev-.*
     
     # Git commit seaded
     argocd-image-updater.argoproj.io/git-commit-user: argocd-image-updater
     argocd-image-updater.argoproj.io/git-commit-email: argocd-image-updater@tanelsokolov.dev
-    argocd-image-updater.argoproj.io/git-commit-message: "chore: update {{.AppName}} frontend image to {{.NewTag}}"
+    argocd-parameter name="git-commit-message: "chore: update {{.AppName}} frontend image to {{.NewTag}}"
 spec:
   project: default
   source:
@@ -32,6 +32,8 @@ spec:
     server: https://kubernetes.default.svc
     namespace: monitoring
   syncPolicy:
-    automated: null
+    automated:
+      prune: true
+      selfHeal: true
     syncOptions:
     - CreateNamespace=true

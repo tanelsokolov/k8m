@@ -9,10 +9,10 @@ metadata:
     argocd-image-updater.argoproj.io/write-back-method: git
     argocd-image-updater.argoproj.io/git-branch: main
     
-    # Timestamp-based versioning
+    # Semantic versioning - ainult patch updates
     argocd-image-updater.argoproj.io/backend.update-strategy: semver
-    argocd-image-updater.argoproj.io/backend.semver-constraint: "~1.0.0"
-    argocd-image-updater.argoproj.io/backend.allow-tags: regexp:^v[0-9]+\.[0-9]+\.[0-9]+$
+    argocd-image-updater.argoproj.io/backend.semver-constraint: "~1.0.0"  # Lubab ainult 1.0.x versioone
+    argocd-image-updater.argoproj.io/backend.allow-tags: regexp:^v1\.0\.[0-9]+$  # Ainult v1.0.x tagid
     argocd-image-updater.argoproj.io/backend.ignore-tags: latest,dev-latest,dev-.*
     
     # Git commit seaded
@@ -32,6 +32,8 @@ spec:
     server: https://kubernetes.default.svc
     namespace: monitoring
   syncPolicy:
-    automated: null
+    automated:  # Parandatud: eemaldatud 'null'
+      prune: true
+      selfHeal: true
     syncOptions:
     - CreateNamespace=true
